@@ -1,0 +1,91 @@
+╔═══════════════════════════════════════════════════════════════╗
+║           LAN PARTY 2026 - QUICK START GUIDE                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+🚀 FASTEST DEPLOYMENT (5 minutes):
+
+1. Extract these files to a folder
+2. Open terminal in that folder
+3. Run these commands:
+
+   git init
+   git add .
+   git commit -m "LAN Party site"
+   npx vercel
+
+4. Follow the prompts (press Enter for defaults)
+5. Your site is LIVE! 🎉
+
+───────────────────────────────────────────────────────────────
+
+📝 WHAT YOU GOT:
+
+✓ index.html         - Main website
+✓ styles.css         - Retro red/white theme
+✓ script.js          - Interactive features
+✓ api/rsvp.js        - Form backend
+✓ README.md          - Full documentation
+✓ vercel.json        - Deployment config
+
+───────────────────────────────────────────────────────────────
+
+🎨 CUSTOMIZATION PRIORITIES:
+
+1. Survey Results (index.html, lines ~90-250)
+   - Update percentages in two places per option
+   - Change labels to match your survey questions
+
+2. FAQ Section (index.html, lines ~400-500)
+   - Update organizer names
+   - Add/remove questions as needed
+
+3. Colors (styles.css, lines 10-20)
+   - Change --color-primary for different red
+   - Adjust other color variables
+
+───────────────────────────────────────────────────────────────
+
+🔒 ADD PASSWORD PROTECTION:
+
+After deploying to Vercel:
+1. Go to project settings
+2. Click "Deployment Protection"
+3. Enable password
+4. Share password with your clan
+
+───────────────────────────────────────────────────────────────
+
+📧 ENABLE EMAIL NOTIFICATIONS:
+
+1. Sign up at resend.com (free)
+2. Get API key
+3. Add to Vercel environment variables:
+   RESEND_API_KEY=your_key
+4. Uncomment email code in api/rsvp.js
+5. Redeploy
+
+───────────────────────────────────────────────────────────────
+
+🛠️ NEXT STEPS WITH CLAUDE CODE:
+
+Once you have the basics running, switch to Claude Code to:
+- Add participant list management
+- Create admin dashboard
+- Build automated emails
+- Add photo gallery
+- Implement schedule builder
+
+Just tell Claude Code to "continue working on the LAN party site"
+and it'll pick up where we left off!
+
+───────────────────────────────────────────────────────────────
+
+❓ NEED HELP?
+
+- Check README.md for detailed instructions
+- Vercel docs: vercel.com/docs
+- The code is well-commented - just read through it!
+
+───────────────────────────────────────────────────────────────
+
+Good luck with Operation Reunion! 🎮

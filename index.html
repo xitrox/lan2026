@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAN Party 2026 - Operation Reunion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background texture overlay -->
+    <div class="texture-overlay"></div>
+
+    <!-- ============================================ -->
+    <!-- LOGIN / REGISTRATION SCREEN -->
+    <!-- ============================================ -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="logo">
+                    <span class="logo-text">OPERATION</span>
+                    <span class="logo-subtitle">REUNION</span>
+                </div>
+                <div class="mission-badge">
+                    <span class="year">2026</span>
+                    <span class="status">ZUGRIFF ERFORDERLICH</span>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2 class="auth-title">Anmeldung</h2>
+                <form id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-username" class="form-label">Benutzername</label>
+                        <input type="text" id="login-username" class="form-input" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Passwort</label>
+                        <input type="password" id="login-password" class="form-input" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Anmelden</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+                <p class="auth-switch">
+                    Noch kein Account? <a href="#" id="show-register">Jetzt registrieren</a>
+                </p>
+                <div id="login-error" class="auth-error" style="display: none;"></div>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="register-form" class="auth-form" style="display: none;">
+                <h2 class="auth-title">Registrierung</h2>
+                <p class="auth-subtitle">Benötigt: Gemeinsames Registrierungspasswort</p>
+                <form id="register-form-element">
+                    <div class="form-group">
+                        <label for="reg-username" class="form-label">Benutzername</label>
+                        <input type="text" id="reg-username" class="form-input" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email" class="form-label">E-Mail</label>
+                        <input type="email" id="reg-email" class="form-input" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password" class="form-label">Passwort</label>
+                        <input type="password" id="reg-password" class="form-input" required autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-registration-password" class="form-label">Registrierungspasswort</label>
+                        <input type="password" id="reg-registration-password" class="form-input" required>
+                        <small class="form-hint">Dieses Passwort wurde euch privat mitgeteilt</small>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Registrieren</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+                <p class="auth-switch">
+                    Bereits registriert? <a href="#" id="show-login">Zur Anmeldung</a>
+                </p>
+                <div id="register-error" class="auth-error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MAIN APPLICATION (hidden initially) -->
+    <!-- ============================================ -->
+    <div id="app-screen" class="app-screen" style="display: none;">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-text">OPERATION</span>
+                        <span class="logo-subtitle">REUNION</span>
+                    </div>
+                    <div class="header-actions">
+                        <span id="user-display" class="user-display"></span>
+                        <button id="user-menu-btn" class="icon-btn" title="Benutzermenü">
+                            ⚙️
+                        </button>
+                        <button id="help-btn" class="icon-btn" title="Hilfe">
+                            ❓
+                        </button>
+                        <button id="logout-btn" class="icon-btn" title="Abmelden">
+                            🚪
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Event Info Section (always visible) -->
+        <section class="event-info-section">
+            <div class="container">
+                <div class="event-info-grid">
+                    <div class="event-info-card">
+                        <div class="info-icon">📅</div>
+                        <div class="info-content">
+                            <div class="info-label">Datum</div>
+                            <div id="event-date" class="info-value">TBD</div>
+                        </div>
+                    </div>
+                    <div class="event-info-card">
+                        <div class="info-icon">⏱️</div>
+                        <div class="info-content">
+                            <div class="info-label">Countdown</div>
+                            <div id="event-countdown" class="info-value">-</div>
+                        </div>
+                    </div>
+                    <div class="event-info-card">
+                        <div class="info-icon">👥</div>
+                        <div class="info-content">
+                            <div class="info-label">Angemeldet</div>
+                            <div id="event-participants" class="info-value">0/10</div>
+                        </div>
+                    </div>
+                    <div class="event-info-card">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <div class="info-label">Ort</div>
+                            <div id="event-location" class="info-value">TBD</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 3 Games -->
+                <div class="top-games">
+                    <h3 class="top-games-title">🎮 Top 3 Spiele</h3>
+                    <div id="top-games-list" class="top-games-list">
+                        <div class="top-game-item">Lädt...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-nav">
+            <div class="container">
+                <div class="tab-list">
+                    <button class="tab-btn active" data-tab="cabins">🏠 Unterkünfte</button>
+                    <button class="tab-btn" data-tab="games">🎮 Spiele</button>
+                    <button class="tab-btn" data-tab="chat">💬 Chat</button>
+                    <button class="tab-btn" data-tab="profile">👤 Profil</button>
+                    <button id="admin-tab-btn" class="tab-btn" data-tab="admin" style="display: none;">⚙️ Admin</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Tab Content -->
+        <div class="tab-content-wrapper">
+            <div class="container">
+
+                <!-- Cabins Tab -->
+                <div id="tab-cabins" class="tab-content active">
+                    <div class="section-header">
+                        <h2 class="section-title">Unterkunfts-Abstimmung</h2>
+                        <button id="add-cabin-btn" class="add-btn" style="display: none;">+ Unterkunft hinzufügen</button>
+                    </div>
+                    <div id="cabins-grid" class="cabins-grid">
+                        <p>Lädt...</p>
+                    </div>
+                </div>
+
+                <!-- Games Tab -->
+                <div id="tab-games" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Spiele-Abstimmung</h2>
+                        <button id="add-game-btn" class="add-btn">+ Spiel hinzufügen</button>
+                    </div>
+                    <div id="games-list" class="games-list">
+                        <p>Lädt...</p>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div id="tab-chat" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Message Board</h2>
+                    </div>
+                    <div class="chat-container">
+                        <div id="chat-messages" class="chat-messages">
+                            <!-- Messages will be loaded here -->
+                        </div>
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="chat-input" class="chat-input" placeholder="Nachricht eingeben... (^1 für Farben)" maxlength="1024">
+                            <button id="chat-send-btn" class="chat-send-btn">Senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="tab-profile" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Profil bearbeiten</h2>
+                    </div>
+                    <div class="profile-form-container">
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="profile-username" class="form-label">Benutzername</label>
+                                <input type="text" id="profile-username" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-email" class="form-label">E-Mail</label>
+                                <input type="email" id="profile-email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Passwort ändern (optional)</label>
+                                <input type="password" id="profile-current-password" class="form-input" placeholder="Aktuelles Passwort" autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="profile-new-password" class="form-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="new-password">
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <span class="btn-text">Profil aktualisieren</span>
+                                <span class="btn-icon">→</span>
+                            </button>
+                        </form>
+                        <div id="profile-message" class="form-response" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab -->
+                <div id="tab-admin" class="tab-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Admin-Panel</h2>
+                    </div>
+
+                    <div class="admin-sections">
+                        <!-- Event Data Management -->
+                        <div class="admin-section">
+                            <h3 class="admin-section-title">Event-Stammdaten</h3>
+                            <form id="admin-event-form">
+                                <div class="form-group">
+                                    <label for="admin-event-title" class="form-label">Titel</label>
+                                    <input type="text" id="admin-event-title" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-event-date" class="form-label">Datum</label>
+                                    <input type="datetime-local" id="admin-event-date" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-event-location" class="form-label">Ort</label>
+                                    <input type="text" id="admin-event-location" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-event-password" class="form-label">Registrierungspasswort</label>
+                                    <input type="text" id="admin-event-password" class="form-input">
+                                </div>
+                                <button type="submit" class="submit-btn">Speichern</button>
+                            </form>
+                        </div>
+
+                        <!-- User Management -->
+                        <div class="admin-section">
+                            <h3 class="admin-section-title">Benutzerverwaltung</h3>
+                            <div id="admin-users-list" class="admin-users-list">
+                                <p>Lädt...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <p class="footer-text">Operation Reunion 2026 • Enemy Territory Clan Reunion</p>
+                    <p class="footer-subtext">Mit Nostalgie und roten Pixeln gebaut</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODALS -->
+    <!-- ============================================ -->
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Hilfe & Color Codes</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Enemy Territory Color Codes</h4>
+                <p>Verwende diese Codes in Chat-Nachrichten, um Text zu färben:</p>
+                <div class="color-codes-list">
+                    <div class="color-code-item"><span class="et-color-0">^0 Schwarz</span></div>
+                    <div class="color-code-item"><span class="et-color-1">^1 Rot</span></div>
+                    <div class="color-code-item"><span class="et-color-2">^2 Grün</span></div>
+                    <div class="color-code-item"><span class="et-color-3">^3 Gelb</span></div>
+                    <div class="color-code-item"><span class="et-color-4">^4 Blau</span></div>
+                    <div class="color-code-item"><span class="et-color-5">^5 Cyan</span></div>
+                    <div class="color-code-item"><span class="et-color-6">^6 Magenta</span></div>
+                    <div class="color-code-item"><span class="et-color-7">^7 Weiß</span></div>
+                </div>
+                <h4>Beispiel</h4>
+                <p><code>^1Hallo ^7Welt ^2!</code> wird zu: <span class="et-color-1">Hallo</span> <span class="et-color-7">Welt</span> <span class="et-color-2">!</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Cabin Modal -->
+    <div id="add-cabin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Unterkunft hinzufügen</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-cabin-form">
+                    <div class="form-group">
+                        <label for="cabin-name" class="form-label">Name</label>
+                        <input type="text" id="cabin-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cabin-url" class="form-label">URL (z.B. Airbnb-Link)</label>
+                        <input type="url" id="cabin-url" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabin-image" class="form-label">Bild-URL</label>
+                        <input type="url" id="cabin-image" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabin-description" class="form-label">Beschreibung</label>
+                        <textarea id="cabin-description" class="form-textarea" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Hinzufügen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Game Modal -->
+    <div id="add-game-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Spiel hinzufügen</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-game-form">
+                    <div class="form-group">
+                        <label for="game-name" class="form-label">Spielname</label>
+                        <input type="text" id="game-name" class="form-input" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Hinzufügen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

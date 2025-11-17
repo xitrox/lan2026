@@ -1,0 +1,26 @@
+{
+  "name": "lan-party-2026",
+  "version": "1.0.0",
+  "description": "Enemy Territory clan reunion LAN party website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "lan-party",
+    "gaming",
+    "enemy-territory",
+    "event-management"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAN Party 2026 - Operation Reunion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background texture overlay -->
+    <div class="texture-overlay"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">OPERATION</span>
+                    <span class="logo-subtitle">REUNION</span>
+                </div>
+                <div class="mission-badge">
+                    <span class="year">2026</span>
+                    <span class="status">MISSION BRIEFING</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="#survey-results" class="nav-link">Intel Report</a></li>
+                <li><a href="#rsvp" class="nav-link">Enlist</a></li>
+                <li><a href="#faq" class="nav-link">Briefing</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">The Clan Reunites</h1>
+                <p class="hero-subtitle">Former Enemy Territory warriors assemble for one epic LAN event</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Max Squad Size</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">TBD</span>
+                        <span class="stat-label">Mission Date</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Nostalgia Level</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Survey Results Section -->
+    <section id="survey-results" class="section survey-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">📊</span>
+                    Intelligence Report
+                </h2>
+                <p class="section-subtitle">Survey Results from the Squad</p>
+            </div>
+
+            <div class="survey-grid">
+                <!-- Survey result cards - easily editable -->
+                <div class="survey-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Preferred Dates</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="result-item">
+                            <span class="result-label">Option A: March 14-16</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <span class="result-value">60%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Option B: April 11-13</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                            <span class="result-value">30%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Option C: May 2-4</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 10%"></div>
+                            </div>
+                            <span class="result-value">10%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Game Preferences</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="result-item">
+                            <span class="result-label">Enemy Territory (Classic)</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                            <span class="result-value">90%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">CS:GO / CS2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%"></div>
+                            </div>
+                            <span class="result-value">70%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Age of Empires II</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="result-value">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Duration</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="result-item">
+                            <span class="result-label">Weekend (2 nights)</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                            <span class="result-value">80%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Long weekend (3 nights)</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 20%"></div>
+                            </div>
+                            <span class="result-value">20%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Budget per Person</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="result-item">
+                            <span class="result-label">€100-150</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                            <span class="result-value">40%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">€150-200</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="result-value">50%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">€200+</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 10%"></div>
+                            </div>
+                            <span class="result-value">10%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Takeaways -->
+            <div class="key-takeaways">
+                <h3 class="takeaways-title">📋 Mission Objectives</h3>
+                <ul class="takeaways-list">
+                    <li>🎯 <strong>Primary Target:</strong> March 14-16 weekend showing strong support</li>
+                    <li>🎮 <strong>Main Objective:</strong> ET Classic is mandatory, CS2 as secondary</li>
+                    <li>💰 <strong>Budget Range:</strong> Most comfortable with €150-200 per person</li>
+                    <li>⏱️ <strong>Duration:</strong> Standard weekend (Fri-Sun) preferred</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="section rsvp-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">✉️</span>
+                    Enlist for Duty
+                </h2>
+                <p class="section-subtitle">Confirm your attendance, soldier!</p>
+            </div>
+
+            <div class="rsvp-container">
+                <form id="rsvp-form" class="rsvp-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Callsign (Name) *</label>
+                        <input type="text" id="name" name="name" class="form-input" required placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attendance" class="form-label">Status *</label>
+                        <select id="attendance" name="attendance" class="form-select" required>
+                            <option value="">Select your status...</option>
+                            <option value="confirmed">✓ Confirmed - I'm in!</option>
+                            <option value="maybe">? Maybe - Checking availability</option>
+                            <option value="no">✗ Cannot attend</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dietary" class="form-label">Dietary Requirements</label>
+                        <input type="text" id="dietary" name="dietary" class="form-input" placeholder="Any allergies or preferences?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea id="notes" name="notes" class="form-textarea" rows="3" placeholder="Anything else we should know?"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Submit RSVP</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+
+                <div id="form-response" class="form-response" style="display: none;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">❓</span>
+                    Mission Briefing
+                </h2>
+                <p class="section-subtitle">Frequently Asked Questions</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>When is the final date?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We're currently analyzing the survey results. March 14-16 is leading with 60% support. We'll finalize and announce the date by mid-December 2025.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Where will it be held?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We're scouting accommodations that can host our squad comfortably. Looking for a place with good internet, space for gaming setups, and proximity to food/supplies. Location TBD soon!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What should I bring?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Your gaming rig (PC/laptop), peripherals (mouse, keyboard, headset), power strips, ethernet cable, and personal items. We'll provide more details once accommodation is confirmed.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What's the cost?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Based on survey results, we're targeting €150-200 per person. This will cover accommodation, food, and drinks. Final cost depends on the venue we secure.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What games will we play?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Enemy Territory is the main event (90% wanted it!). We'll also have CS2, Age of Empires II, and we're open to suggestions. Bring your favorite LAN games!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I bring a guest?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>This is primarily for clan members, but reach out to the organizers if you'd like to bring someone. We have a 10-person cap, so space is limited.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Who are the organizers?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>This event is organized by [Your Name] and [Co-organizer Name]. Feel free to reach out via email or the RSVP form with any questions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">Operation Reunion 2026 • Enemy Territory Clan Reunion</p>
+                <p class="footer-subtext">Built with nostalgia and red pixels</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
