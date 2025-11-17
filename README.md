@@ -1,248 +1,298 @@
 # LAN Party 2026 - Operation Reunion 🎮
 
-A retro Enemy Territory-inspired website for organizing your clan's LAN party reunion. Built with vanilla HTML/CSS/JS and designed for easy deployment on Vercel.
+Eine vollständige Web-Applikation für die Organisation einer LAN-Party mit Enemy Territory-inspiriertem Design.
 
-## Features
+## ✨ Features
 
-- 📊 **Survey Results Display** - Show voting results with animated progress bars
-- ✉️ **RSVP System** - Collect attendee information with serverless backend
-- ❓ **FAQ Section** - Collapsible accordion for common questions
-- 🎨 **Retro Gaming Aesthetic** - Red/white color scheme inspired by Enemy Territory
-- 📱 **Fully Responsive** - Works great on mobile, tablet, and desktop
-- 🚀 **Serverless Backend** - Easy form handling with Vercel Functions
+### 🔐 **Benutzer-Authentifizierung**
+- Registrierung mit gemeinsamem Start-Passwort
+- Login mit JWT-Token (lang-lebig bis Logout)
+- Profilverwaltung (E-Mail & Passwort ändern)
+- Admin-Accounts mit erweiterten Rechten
 
-## Quick Start
+### 🏠 **Unterkunfts-Voting**
+- Admins können Unterkünfte hinzufügen (inkl. Airbnb-Links)
+- Alle User können für Unterkünfte voten
+- Live-Anzeige der Votes für alle Teilnehmer
 
-### 1. Clone/Download the Project
+### 🎮 **Spiele-Voting**
+- Jeder User kann neue Spiele vorschlagen
+- Voting-System für alle Spiele
+- Live-Anzeige der Top 3 Spiele
+- Admins können Spiele entfernen
+
+### 💬 **Message Board (ET-Style Chat)**
+- Enemy Territory Color Codes (^0 bis ^7)
+- Kein Timestamp (wie im Original!)
+- Nachrichten bearbeiten & löschen
+- Auto-Refresh alle 10 Sekunden
+
+### 📊 **Event-Management**
+- Event-Infosektion mit Datum, Countdown, Teilnehmer, Ort
+- Live-Anzeige der angemeldeten Spieler
+- Admins können Event-Stammdaten verwalten
+
+### ⚙️ **Admin-Panel**
+- Benutzerverwaltung (löschen, Admin-Status ändern)
+- Passwörter zurücksetzen
+- Event-Daten bearbeiten
+- Registrierungspasswort ändern
+- Nachrichten moderieren
+
+## 🚀 Quick Start
+
+### 1. Repository klonen
 
 ```bash
-# If you have this as a download, extract it to a folder
-# Then navigate to that folder in your terminal
-cd lan-party-2026
+git clone <dein-repo>
+cd lan2026
 ```
 
-### 2. Initialize Git Repository
+### 2. Dependencies installieren
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit: LAN Party site"
+npm install
 ```
 
-### 3. Deploy to Vercel (Recommended)
+Dies installiert:
+- `bcrypt` - Passwort-Hashing
+- `jsonwebtoken` - JWT-Token-Generierung
+- `@vercel/postgres` - PostgreSQL-Datenbank
+- `vercel` - Deployment-Tool (Dev-Dependency)
 
-**Option A: Using Vercel CLI**
+### 3. Vercel Postgres Datenbank erstellen
+
+1. Gehe zu [vercel.com/dashboard](https://vercel.com/dashboard)
+2. Erstelle ein neues Projekt oder wähle ein bestehendes
+3. Gehe zu **Storage** → **Create Database** → **Postgres**
+4. Wähle den kostenlosen Plan
+5. Erstelle die Datenbank
+
+Vercel setzt automatisch die Environment Variables:
+- `POSTGRES_URL`
+- `POSTGRES_PRISMA_URL`
+- `POSTGRES_URL_NON_POOLING`
+- etc.
+
+### 4. Datenbank-Schema initialisieren
+
+**Option A: Via Vercel Dashboard**
+```bash
+# 1. Gehe zu Storage → Dein Postgres → Query Tab
+# 2. Kopiere den Inhalt von db/schema.sql
+# 3. Führe das SQL aus
+```
+
+**Option B: Via CLI (erfordert psql)**
+```bash
+# Hole Environment Variables
+vercel env pull .env.local
+
+# Führe Schema aus
+psql $POSTGRES_URL < db/schema.sql
+```
+
+### 5. JWT Secret festlegen (Optional, aber empfohlen)
+
+Füge eine Environment Variable hinzu:
 
 ```bash
-# Install Vercel CLI (one-time setup)
-npm install -g vercel
+vercel env add JWT_SECRET
+# Gib einen sicheren, zufälligen String ein
+```
 
-# Deploy (follow the prompts)
-vercel
+Wenn nicht gesetzt, wird ein Default-Secret verwendet (nicht für Production!).
 
-# For production deployment
+### 6. Deploy!
+
+```bash
 vercel --prod
 ```
 
-**Option B: Using GitHub + Vercel Dashboard**
+### 7. Ersten Admin-User erstellen
 
-1. Create a new repository on GitHub
-2. Push your code:
-   ```bash
-   git remote add origin https://github.com/yourusername/lan-party-2026.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. Go to [vercel.com](https://vercel.com)
-4. Click "New Project"
-5. Import your GitHub repository
-6. Click "Deploy"
+Nach dem Deployment musst du einen ersten Admin-User manuell in der Datenbank erstellen:
 
-That's it! Your site will be live in ~30 seconds.
+**Via Vercel Dashboard:**
+1. Gehe zu Storage → Dein Postgres → Query Tab
+2. Führe folgenden SQL-Befehl aus:
 
-### 4. Alternative Hosting Options
+```sql
+-- Erst registrieren (über die Website mit dem Registrierungspasswort)
+-- Dann Admin-Status setzen:
+UPDATE users SET is_admin = true WHERE username = 'dein-username';
+```
 
-**GitHub Pages** (No serverless functions)
+**Oder:** Nutze die normale Registrierung und setze dann manuell `is_admin = true` in der Datenbank.
+
+## 📁 Projekt-Struktur
+
+```
+lan2026/
+├── index.html              # Haupt-HTML (Login + App)
+├── app.js                  # Frontend JavaScript
+├── styles.css              # Styling (ET-inspiriert)
+├── package.json            # Dependencies
+├── vercel.json             # Vercel-Konfiguration
+│
+├── api/                    # Serverless Functions
+│   ├── auth/
+│   │   ├── login.js
+│   │   ├── register.js
+│   │   ├── verify.js
+│   │   └── update-profile.js
+│   ├── admin/
+│   │   ├── users.js
+│   │   └── reset-password.js
+│   ├── cabins/
+│   │   ├── index.js
+│   │   ├── manage.js
+│   │   └── vote.js
+│   ├── games/
+│   │   ├── index.js
+│   │   ├── add.js
+│   │   ├── vote.js
+│   │   └── delete.js
+│   ├── messages/
+│   │   ├── index.js
+│   │   ├── post.js
+│   │   ├── edit.js
+│   │   └── delete.js
+│   └── event/
+│       ├── index.js
+│       └── update.js
+│
+├── lib/                    # Utility-Module
+│   ├── auth.js            # Auth-Funktionen
+│   └── db.js              # Datenbank-Helpers
+│
+└── db/                     # Datenbank-Schema
+    ├── schema.sql         # PostgreSQL Schema
+    └── README.md          # Datenbank-Dokumentation
+```
+
+## 🎨 Enemy Territory Color Codes
+
+Im Chat können folgende Color Codes verwendet werden:
+
+- `^0` - Schwarz
+- `^1` - Rot
+- `^2` - Grün
+- `^3` - Gelb
+- `^4` - Blau
+- `^5` - Cyan
+- `^6` - Magenta
+- `^7` - Weiß
+
+**Beispiel:** `^1Hallo ^7Welt!` wird zu <span style="color: red">Hallo</span> <span style="color: white">Welt!</span>
+
+## 🔧 Lokale Entwicklung
+
 ```bash
-# Just deploy the static files
-git push origin main
-# Enable GitHub Pages in repo settings
+# Environment Variables holen
+vercel env pull .env.local
+
+# Dev-Server starten
+vercel dev
 ```
 
-**Netlify** (Similar to Vercel)
-- Drag and drop your folder on netlify.com
-- Or connect your GitHub repo
+Die App läuft dann auf `http://localhost:3000`
 
-## Updating Content
+## 🔐 Sicherheit
 
-### Survey Results
+### Standard-Registrierungspasswort
 
-Edit `index.html` and find the survey section. Update the percentage values and progress bar widths:
+Das Standard-Registrierungspasswort ist: **`lan2026reunion`**
 
-```html
-<div class="result-item">
-    <span class="result-label">Your Option</span>
-    <div class="progress-bar">
-        <!-- Change the width percentage here -->
-        <div class="progress-fill" style="width: 75%"></div>
-    </div>
-    <span class="result-value">75%</span>
-</div>
+**⚠️ WICHTIG:** Ändere dieses Passwort im Admin-Panel unter "Event-Stammdaten" → "Registrierungspasswort"!
+
+### JWT Secret
+
+Setze ein sicheres JWT Secret als Environment Variable:
+
+```bash
+vercel env add JWT_SECRET production
+# Gib einen langen, zufälligen String ein (z.B. 32+ Zeichen)
 ```
 
-### FAQ Section
+### Best Practices
 
-Add new questions by copying this block in `index.html`:
+- Teile das Registrierungspasswort nur über sichere Kanäle (Signal, WhatsApp, etc.)
+- Ändere das Registrierungspasswort nach der Event-Registrierungsphase
+- Sichere Admin-Passwörter verwenden (min. 12 Zeichen)
+- Vercel Postgres ist standardmäßig verschlüsselt (SSL)
 
-```html
-<div class="faq-item">
-    <button class="faq-question">
-        <span>Your question here?</span>
-        <span class="faq-icon">+</span>
-    </button>
-    <div class="faq-answer">
-        <p>Your answer here.</p>
-    </div>
-</div>
+## 📱 Responsive Design
+
+Die App ist vollständig responsive und funktioniert auf:
+- 📱 Smartphones (iOS & Android)
+- 💻 Tablets
+- 🖥️ Desktop-PCs
+
+## 🛠️ Troubleshooting
+
+### "Datenbankverbindung fehlgeschlagen"
+
+Stelle sicher, dass:
+1. Die Vercel Postgres Datenbank erstellt wurde
+2. Die Environment Variables korrekt gesetzt sind
+3. Das Schema initialisiert wurde
+
+### "Token ungültig"
+
+Lösche die Cookies/LocalStorage und logge dich erneut ein.
+
+### "Registrierungspasswort ungültig"
+
+Das Standard-Passwort ist `lan2026reunion`. Falls geändert, frage einen Admin.
+
+### API-Endpunkte funktionieren nicht
+
+Überprüfe die Vercel-Function-Logs:
+```bash
+vercel logs
 ```
 
-### Colors
+## 📊 Datenbank-Management
 
-All colors are defined in `styles.css` at the top:
+### Backup erstellen
 
-```css
-:root {
-    --color-primary: #C41E3A; /* Main red */
-    --color-secondary: #8B0000; /* Dark red */
-    /* ... change these to customize */
-}
+```bash
+# Via Vercel Dashboard: Storage → Data → Export
+# Oder via CLI:
+pg_dump $POSTGRES_URL > backup.sql
 ```
 
-## Setting Up the RSVP Backend
+### Daten zurücksetzen
 
-The RSVP form currently shows a success message but doesn't store data. Here's how to add real storage:
-
-### Option 1: Email Notifications (Easiest)
-
-1. Sign up for [Resend](https://resend.com) (free tier: 100 emails/day)
-2. Get your API key
-3. Add to Vercel:
-   - Go to your project settings → Environment Variables
-   - Add: `RESEND_API_KEY` = your_key_here
-4. Uncomment the email code in `api/rsvp.js`
-
-### Option 2: Google Sheets Storage
-
-1. Create a Google Sheet
-2. Set up a service account (see [Google Sheets API docs](https://developers.google.com/sheets/api/quickstart/nodejs))
-3. Add environment variables to Vercel:
-   - `GOOGLE_SERVICE_ACCOUNT_EMAIL`
-   - `GOOGLE_PRIVATE_KEY`
-   - `SPREADSHEET_ID`
-4. Uncomment the Google Sheets code in `api/rsvp.js`
-
-### Option 3: Simple Database (Vercel KV)
-
-1. Enable Vercel KV in your project dashboard
-2. Update `api/rsvp.js` to use KV storage
-3. View stored data in Vercel dashboard
-
-## File Structure
-
-```
-lan-party-2026/
-├── index.html          # Main HTML file
-├── styles.css          # All styling
-├── script.js           # Interactive features
-├── api/
-│   └── rsvp.js        # Serverless function for form handling
-├── vercel.json        # Vercel configuration
-├── .gitignore         # Git ignore rules
-└── README.md          # This file
+```bash
+# Achtung: Löscht ALLE Daten!
+psql $POSTGRES_URL < db/schema.sql
 ```
 
-## Adding New Sections
+## 🎯 Feature-Roadmap
 
-Want to add accommodation details or finalized dates? Just add a new section in `index.html`:
+Mögliche zukünftige Erwebnisse:
 
-```html
-<section id="accommodation" class="section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="title-icon">🏠</span>
-                Accommodation
-            </h2>
-        </div>
-        <!-- Your content here -->
-    </div>
-</section>
-```
+- [ ] Benachrichtigungen bei neuen Chat-Nachrichten
+- [ ] Bildupload für Unterkünfte
+- [ ] Teilnehmerliste mit Avataren
+- [ ] Turnier-Bracket-System
+- [ ] Event-Fotos-Galerie
+- [ ] RSS-Feed für Ankündigungen
 
-Update the navigation:
+## 📄 Lizenz
 
-```html
-<li><a href="#accommodation" class="nav-link">Accommodation</a></li>
-```
+MIT License - Free to use and modify for your LAN party!
 
-## Customization Tips
+## 🙏 Credits
 
-### Change the Theme
-- Edit the CSS variables in `styles.css`
-- Update the military/gaming theme text in `index.html`
-
-### Add Password Protection
-Vercel makes this easy:
-1. Go to your project settings
-2. Navigate to "Deployment Protection"
-3. Enable password protection
-4. Share the password with your clan members
-
-### Add More Interactive Features
-- Edit `script.js` to add animations, counters, etc.
-- The file is well-commented for easy understanding
-
-## Browser Compatibility
-
-Works on all modern browsers:
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers
-
-## Troubleshooting
-
-**RSVP form not working?**
-- Check browser console for errors
-- Verify the API route exists at `/api/rsvp`
-- Check Vercel function logs in your dashboard
-
-**Styles not loading?**
-- Clear browser cache
-- Check that `styles.css` is in the same directory as `index.html`
-
-**Serverless function errors?**
-- Check Vercel logs in your project dashboard
-- Verify environment variables are set correctly
-
-## Future Enhancements
-
-Ideas for Claude Code sessions:
-- [ ] Participant list management page (admin only)
-- [ ] Automated email confirmations
-- [ ] Game voting system
-- [ ] Photo gallery from previous LANs
-- [ ] Schedule builder
-- [ ] Real-time attendance counter
-
-## Support
-
-Need help? The code is straightforward and well-commented. For Vercel-specific questions, check their [documentation](https://vercel.com/docs).
-
-## License
-
-Free to use and modify for your LAN party! Have fun! 🎮
+- Inspiriert von **Wolfenstein: Enemy Territory**
+- Gebaut mit ❤️ und roten Pixeln
+- Powered by **Vercel** & **PostgreSQL**
 
 ---
 
-**Built with nostalgia and red pixels** ❤️
+**Viel Spaß bei eurer LAN Party! 🎮🔥**
+
+Bei Fragen oder Problemen: Erstelle ein Issue auf GitHub oder kontaktiere den Admin.
