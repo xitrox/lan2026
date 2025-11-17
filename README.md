@@ -135,32 +135,13 @@ lan2026/
 ├── package.json            # Dependencies
 ├── vercel.json             # Vercel-Konfiguration
 │
-├── api/                    # Serverless Functions
-│   ├── auth/
-│   │   ├── login.js
-│   │   ├── register.js
-│   │   ├── verify.js
-│   │   └── update-profile.js
-│   ├── admin/
-│   │   ├── users.js
-│   │   └── reset-password.js
-│   ├── cabins/
-│   │   ├── index.js
-│   │   ├── manage.js
-│   │   └── vote.js
-│   ├── games/
-│   │   ├── index.js
-│   │   ├── add.js
-│   │   ├── vote.js
-│   │   └── delete.js
-│   ├── messages/
-│   │   ├── index.js
-│   │   ├── post.js
-│   │   ├── edit.js
-│   │   └── delete.js
-│   └── event/
-│       ├── index.js
-│       └── update.js
+├── api/                    # Serverless Functions (6 Functions)
+│   ├── auth.js            # Auth-API (Login, Register, Verify, Update-Profile)
+│   ├── admin.js           # Admin-API (User-Management, Password-Reset)
+│   ├── cabins.js          # Cabins-API (List, Add, Vote, Delete)
+│   ├── games.js           # Games-API (List, Add, Vote, Delete)
+│   ├── messages.js        # Messages-API (List, Post, Edit, Delete)
+│   └── event.js           # Event-API (Get, Update)
 │
 ├── lib/                    # Utility-Module
 │   ├── auth.js            # Auth-Funktionen
@@ -170,6 +151,15 @@ lan2026/
     ├── schema.sql         # PostgreSQL Schema
     └── README.md          # Datenbank-Dokumentation
 ```
+
+**✅ Optimiert für Vercel Hobby Plan (max. 12 Functions)**
+
+Die APIs sind konsolidiert und nutzen Query-Parameter für verschiedene Operationen:
+- `/api/auth?action=login` - Login
+- `/api/auth?action=register` - Registrierung
+- `/api/cabins?action=list` - Hütten abrufen
+- `/api/cabins?action=vote` - Für Hütte voten
+- usw.
 
 ## 🎨 Enemy Territory Color Codes
 

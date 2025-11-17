@@ -51,25 +51,25 @@ const API = {
 
     // Auth endpoints
     async login(username, password) {
-        return this.request('/api/auth/login', {
+        return this.request('/api/auth?action=login', {
             method: 'POST',
             body: JSON.stringify({ username, password })
         });
     },
 
     async register(username, email, password, registrationPassword) {
-        return this.request('/api/auth/register', {
+        return this.request('/api/auth?action=register', {
             method: 'POST',
             body: JSON.stringify({ username, email, password, registrationPassword })
         });
     },
 
     async verifyToken() {
-        return this.request('/api/auth/verify');
+        return this.request('/api/auth?action=verify');
     },
 
     async updateProfile(email, currentPassword, newPassword) {
-        return this.request('/api/auth/update-profile', {
+        return this.request('/api/auth?action=update-profile', {
             method: 'POST',
             body: JSON.stringify({ email, currentPassword, newPassword })
         });
@@ -77,11 +77,11 @@ const API = {
 
     // Event endpoints
     async getEventData() {
-        return this.request('/api/event');
+        return this.request('/api/event?action=get');
     },
 
     async updateEventData(data) {
-        return this.request('/api/event/update', {
+        return this.request('/api/event?action=update', {
             method: 'PUT',
             body: JSON.stringify(data)
         });
@@ -89,25 +89,25 @@ const API = {
 
     // Cabins endpoints
     async getCabins() {
-        return this.request('/api/cabins');
+        return this.request('/api/cabins?action=list');
     },
 
     async voteCabin(cabinId, vote) {
-        return this.request('/api/cabins/vote', {
+        return this.request('/api/cabins?action=vote', {
             method: 'POST',
             body: JSON.stringify({ cabinId, vote })
         });
     },
 
     async addCabin(cabin) {
-        return this.request('/api/cabins/manage', {
+        return this.request('/api/cabins?action=add', {
             method: 'POST',
             body: JSON.stringify(cabin)
         });
     },
 
     async deleteCabin(cabinId) {
-        return this.request('/api/cabins/manage', {
+        return this.request('/api/cabins?action=delete', {
             method: 'DELETE',
             body: JSON.stringify({ cabinId })
         });
@@ -115,25 +115,25 @@ const API = {
 
     // Games endpoints
     async getGames() {
-        return this.request('/api/games');
+        return this.request('/api/games?action=list');
     },
 
     async addGame(name) {
-        return this.request('/api/games/add', {
+        return this.request('/api/games?action=add', {
             method: 'POST',
             body: JSON.stringify({ name })
         });
     },
 
     async voteGame(gameId, vote) {
-        return this.request('/api/games/vote', {
+        return this.request('/api/games?action=vote', {
             method: 'POST',
             body: JSON.stringify({ gameId, vote })
         });
     },
 
     async deleteGame(gameId) {
-        return this.request('/api/games/delete', {
+        return this.request('/api/games?action=delete', {
             method: 'DELETE',
             body: JSON.stringify({ gameId })
         });
@@ -141,25 +141,25 @@ const API = {
 
     // Messages endpoints
     async getMessages() {
-        return this.request('/api/messages');
+        return this.request('/api/messages?action=list');
     },
 
     async postMessage(content) {
-        return this.request('/api/messages/post', {
+        return this.request('/api/messages?action=post', {
             method: 'POST',
             body: JSON.stringify({ content })
         });
     },
 
     async editMessage(messageId, content) {
-        return this.request('/api/messages/edit', {
+        return this.request('/api/messages?action=edit', {
             method: 'PUT',
             body: JSON.stringify({ messageId, content })
         });
     },
 
     async deleteMessage(messageId) {
-        return this.request('/api/messages/delete', {
+        return this.request('/api/messages?action=delete', {
             method: 'DELETE',
             body: JSON.stringify({ messageId })
         });
@@ -167,25 +167,25 @@ const API = {
 
     // Admin endpoints
     async getUsers() {
-        return this.request('/api/admin/users');
+        return this.request('/api/admin?action=users');
     },
 
     async deleteUser(userId) {
-        return this.request('/api/admin/users', {
+        return this.request('/api/admin?action=delete-user', {
             method: 'DELETE',
             body: JSON.stringify({ userId })
         });
     },
 
     async toggleAdmin(userId, isAdmin) {
-        return this.request('/api/admin/users', {
-            method: 'PUT',
+        return this.request('/api/admin?action=toggle-admin', {
+            method: 'POST',
             body: JSON.stringify({ userId, isAdmin })
         });
     },
 
     async resetPassword(userId, newPassword) {
-        return this.request('/api/admin/reset-password', {
+        return this.request('/api/admin?action=reset-password', {
             method: 'POST',
             body: JSON.stringify({ userId, newPassword })
         });
