@@ -430,17 +430,29 @@ async function loadEventData() {
 function updateEventDisplay() {
     const event = AppState.eventData;
 
-    // Update date
+    // Update title
+    document.getElementById('auth-event-title').textContent = event.title || 'LAN PARTY 2026';
+    document.getElementById('app-event-title').textContent = event.title || 'LAN PARTY 2026';
+    document.title = (event.title || 'LAN Party 2026') + ' - Management';
+
+    // Update date with time range
     if (event.eventDate) {
-        const date = new Date(event.eventDate);
-        document.getElementById('event-date').textContent = date.toLocaleDateString('de-DE', {
+        const startDate = new Date(event.eventDate);
+        const dateStr = startDate.toLocaleDateString('de-DE', {
+            weekday: 'long',
             day: '2-digit',
-            month: '2-digit',
+            month: 'long',
             year: 'numeric'
         });
-        updateCountdown(date);
+        const timeStr = startDate.toLocaleTimeString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        document.getElementById('event-date-hero').textContent = `${dateStr}, ab ${timeStr} Uhr`;
+        updateCountdown(startDate);
     } else {
-        document.getElementById('event-date').textContent = 'TBD';
+        document.getElementById('event-date-hero').textContent = 'Termin wird noch bekannt gegeben';
     }
 
     // Update location
@@ -449,6 +461,9 @@ function updateEventDisplay() {
     // Update participants
     document.getElementById('event-participants').textContent =
         `${event.registeredParticipants}/${event.maxParticipants}`;
+
+    // Load and display participant names
+    loadParticipantsList();
 }
 
 function updateCountdown(targetDate) {
@@ -456,17 +471,54 @@ function updateCountdown(targetDate) {
     const diff = targetDate - now;
 
     if (diff < 0) {
-        document.getElementById('event-countdown').textContent = 'EVENT LÄUFT!';
+        document.getElementById('countdown-days').textContent = '00';
+        document.getElementById('countdown-hours').textContent = '00';
+        document.getElementById('countdown-minutes').textContent = '00';
+        document.getElementById('countdown-seconds').textContent = '00';
+        document.querySelector('.countdown-label').textContent = 'EVENT LÄUFT! 🎉';
         return;
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    document.getElementById('event-countdown').textContent = `${days}d ${hours}h`;
+    document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
+    document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
 
-    // Update every minute
-    setTimeout(() => updateCountdown(targetDate), 60000);
+    // Update every second for live countdown
+    setTimeout(() => updateCountdown(targetDate), 1000);
+}
+
+// ============================================
+// PARTICIPANTS LIST
+// ============================================
+async function loadParticipantsList() {
+    try {
+        const response = await API.getUsers();
+        const users = response.users;
+
+        const listContainer = document.getElementById('participants-list');
+
+        if (users.length === 0) {
+            listContainer.innerHTML = '<div class="participant-item">Noch keine Teilnehmer</div>';
+            return;
+        }
+
+        listContainer.innerHTML = users.map(user => `
+            <div class="participant-item">
+                <span class="participant-avatar">${user.username.charAt(0).toUpperCase()}</span>
+                <span class="participant-name">${user.username}</span>
+                ${user.is_admin ? '<span class="participant-badge">👑</span>' : ''}
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Failed to load participants:', error);
+        // Silent fail - participants list is not critical
+    }
 }
 
 // ============================================

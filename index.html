@@ -17,8 +17,7 @@
         <div class="auth-container">
             <div class="auth-header">
                 <div class="logo">
-                    <span class="logo-text">OPERATION</span>
-                    <span class="logo-subtitle">REUNION</span>
+                    <span id="auth-event-title" class="logo-text">LAN PARTY 2026</span>
                 </div>
                 <div class="mission-badge">
                     <span class="year">2026</span>
@@ -94,8 +93,7 @@
             <div class="container">
                 <div class="header-content">
                     <div class="logo">
-                        <span class="logo-text">OPERATION</span>
-                        <span class="logo-subtitle">REUNION</span>
+                        <span id="app-event-title" class="logo-text">LAN PARTY 2026</span>
                     </div>
                     <div class="header-actions">
                         <span id="user-display" class="user-display"></span>
@@ -114,28 +112,44 @@
         </header>
 
         <!-- Event Info Section (always visible) -->
-        <section class="event-info-section">
+        <section class="event-info-section event-info-top">
             <div class="container">
+                <!-- Countdown & Date (prominent) -->
+                <div class="event-countdown-hero">
+                    <div class="countdown-main">
+                        <div class="countdown-label">Countdown bis zum Event</div>
+                        <div id="event-countdown-detailed" class="countdown-value">
+                            <div class="countdown-segment">
+                                <span id="countdown-days" class="countdown-number">--</span>
+                                <span class="countdown-unit">Tage</span>
+                            </div>
+                            <div class="countdown-separator">:</div>
+                            <div class="countdown-segment">
+                                <span id="countdown-hours" class="countdown-number">--</span>
+                                <span class="countdown-unit">Std</span>
+                            </div>
+                            <div class="countdown-separator">:</div>
+                            <div class="countdown-segment">
+                                <span id="countdown-minutes" class="countdown-number">--</span>
+                                <span class="countdown-unit">Min</span>
+                            </div>
+                            <div class="countdown-separator">:</div>
+                            <div class="countdown-segment">
+                                <span id="countdown-seconds" class="countdown-number">--</span>
+                                <span class="countdown-unit">Sek</span>
+                            </div>
+                        </div>
+                        <div id="event-date-hero" class="event-date-hero">TBD</div>
+                    </div>
+                </div>
+
                 <div class="event-info-grid">
-                    <div class="event-info-card">
-                        <div class="info-icon">📅</div>
-                        <div class="info-content">
-                            <div class="info-label">Datum</div>
-                            <div id="event-date" class="info-value">TBD</div>
-                        </div>
-                    </div>
-                    <div class="event-info-card">
-                        <div class="info-icon">⏱️</div>
-                        <div class="info-content">
-                            <div class="info-label">Countdown</div>
-                            <div id="event-countdown" class="info-value">-</div>
-                        </div>
-                    </div>
                     <div class="event-info-card">
                         <div class="info-icon">👥</div>
                         <div class="info-content">
-                            <div class="info-label">Angemeldet</div>
+                            <div class="info-label">Teilnehmer</div>
                             <div id="event-participants" class="info-value">0/10</div>
+                            <div id="participants-list" class="participants-list"></div>
                         </div>
                     </div>
                     <div class="event-info-card">
