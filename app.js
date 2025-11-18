@@ -373,6 +373,11 @@ document.getElementById('register-form-element').addEventListener('submit', asyn
     }
 });
 
+document.getElementById('user-menu-btn').addEventListener('click', () => {
+    // Switch to Profile tab
+    document.querySelector('[data-tab="profile"]').click();
+});
+
 document.getElementById('logout-btn').addEventListener('click', () => {
     if (confirm('Wirklich abmelden?')) {
         clearToken();
