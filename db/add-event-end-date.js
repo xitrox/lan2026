@@ -7,9 +7,10 @@ require('dotenv').config({ path: '.env.local' });
 const { Pool } = require('pg');
 
 async function addEndDate() {
-  const connectionString = (process.env.POSTGRES_URL_NON_POOLING ||
+  // Use pooled connection for migration to avoid max clients error
+  const connectionString = (process.env.POSTGRES_URL ||
                             process.env.POSTGRES_PRISMA_URL ||
-                            process.env.POSTGRES_URL)
+                            process.env.POSTGRES_URL_NON_POOLING)
                            ?.replace('?sslmode=require', '')
                            ?.replace('&sslmode=require', '');
 

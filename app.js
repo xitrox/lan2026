@@ -373,18 +373,6 @@ document.getElementById('register-form-element').addEventListener('submit', asyn
     }
 });
 
-document.getElementById('user-menu-btn').addEventListener('click', () => {
-    // Switch to Profile tab
-    document.querySelector('[data-tab="profile"]').click();
-});
-
-document.getElementById('logout-btn').addEventListener('click', () => {
-    if (confirm('Wirklich abmelden?')) {
-        clearToken();
-        showAuthScreen();
-    }
-});
-
 // ============================================
 // TAB NAVIGATION
 // ============================================
@@ -429,9 +417,12 @@ async function loadEventData() {
 function updateEventDisplay() {
     const event = AppState.eventData;
 
-    // Update title
-    document.getElementById('auth-event-title').textContent = event.title || 'LAN PARTY 2026';
-    document.getElementById('app-event-title').textContent = event.title || 'LAN PARTY 2026';
+    // Update title (check if elements exist)
+    const authTitle = document.getElementById('auth-event-title');
+    const appTitle = document.getElementById('app-event-title');
+
+    if (authTitle) authTitle.textContent = event.title || 'LAN PARTY 2026';
+    if (appTitle) appTitle.textContent = event.title || 'LAN PARTY 2026';
     document.title = (event.title || 'LAN Party 2026') + ' - Management';
 
     // Update date with time range
@@ -1252,4 +1243,23 @@ document.addEventListener('keydown', (e) => {
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
+
+    // Header button event listeners
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    if (userMenuBtn) {
+        userMenuBtn.addEventListener('click', () => {
+            // Switch to Profile tab
+            document.querySelector('[data-tab="profile"]')?.click();
+        });
+    }
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Wirklich abmelden?')) {
+                clearToken();
+                showAuthScreen();
+            }
+        });
+    }
 });
