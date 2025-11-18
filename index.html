@@ -19,10 +19,6 @@
                 <div class="logo">
                     <span id="auth-event-title" class="logo-text">LAN PARTY 2026</span>
                 </div>
-                <div class="mission-badge">
-                    <span class="year">2026</span>
-                    <span class="status">ZUGRIFF ERFORDERLICH</span>
-                </div>
             </div>
 
             <!-- Login Form -->
@@ -97,19 +93,39 @@
                     </div>
                     <div class="header-actions">
                         <span id="user-display" class="user-display"></span>
-                        <button id="user-menu-btn" class="icon-btn" title="Benutzermenü">
-                            ⚙️
-                        </button>
-                        <button id="help-btn" class="icon-btn" title="Hilfe">
-                            ❓
-                        </button>
-                        <button id="logout-btn" class="icon-btn" title="Abmelden">
-                            🚪
+                        <button id="burger-menu-btn" class="burger-btn" title="Menü">
+                            <span class="burger-line"></span>
+                            <span class="burger-line"></span>
+                            <span class="burger-line"></span>
                         </button>
                     </div>
                 </div>
             </div>
         </header>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="mobile-menu">
+            <div class="mobile-menu-header">
+                <span class="mobile-menu-title">MENÜ</span>
+                <button id="mobile-menu-close" class="mobile-menu-close">&times;</button>
+            </div>
+            <nav class="mobile-menu-nav">
+                <button class="mobile-nav-item" data-mobile-tab="cabins">🏠 Unterkünfte</button>
+                <button class="mobile-nav-item" data-mobile-tab="games">🎮 Spiele</button>
+                <button class="mobile-nav-item" data-mobile-tab="profile">👤 Profil</button>
+                <button id="mobile-admin-nav" class="mobile-nav-item" data-mobile-tab="admin" style="display: none;">⚙️ Admin</button>
+            </nav>
+            <div class="mobile-menu-actions">
+                <button id="mobile-help-btn" class="mobile-action-btn">
+                    <span class="mobile-action-icon">❓</span>
+                    <span class="mobile-action-text">Hilfe</span>
+                </button>
+                <button id="mobile-logout-btn" class="mobile-action-btn">
+                    <span class="mobile-action-icon">🚪</span>
+                    <span class="mobile-action-text">Abmelden</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Event Info Section (always visible) -->
         <section class="event-info-section event-info-top">

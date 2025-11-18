@@ -1329,6 +1329,179 @@ body {
     background: var(--color-primary);
 }
 
+/* ============================================
+   BURGER MENU
+   ============================================ */
+.burger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: transform 0.3s ease;
+}
+
+.burger-btn:hover {
+    transform: scale(1.1);
+}
+
+.burger-line {
+    width: 24px;
+    height: 3px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.burger-btn:hover .burger-line {
+    background-color: var(--color-accent);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: var(--color-white);
+    border-left: 3px solid var(--color-primary);
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu-header {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-secondary);
+}
+
+.mobile-menu-title {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.mobile-menu-close {
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.mobile-menu-close:hover {
+    transform: rotate(90deg);
+}
+
+.mobile-menu-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.mobile-nav-item {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    color: var(--color-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.mobile-nav-item:hover {
+    background: var(--color-off-white);
+    border-left-color: var(--color-primary);
+}
+
+.mobile-nav-item.active {
+    background: var(--color-cream);
+    border-left-color: var(--color-primary);
+    font-weight: bold;
+}
+
+.mobile-menu-actions {
+    border-top: 2px solid var(--color-light-gray);
+    padding: 1rem;
+    background: var(--color-off-white);
+}
+
+.mobile-action-btn {
+    width: 100%;
+    background: var(--color-white);
+    border: 2px solid var(--color-primary);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    color: var(--color-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mobile-action-btn:last-child {
+    margin-bottom: 0;
+}
+
+.mobile-action-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.mobile-action-icon {
+    font-size: 1.2rem;
+}
+
+.mobile-action-text {
+    flex: 1;
+}
+
+/* Hide desktop tab nav on mobile, show on desktop */
+@media (max-width: 768px) {
+    .tab-nav {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .burger-btn {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: none !important;
+    }
+}
+
 @media (max-width: 768px) {
     .countdown-number {
         font-size: 2rem;

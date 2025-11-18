@@ -441,14 +441,34 @@ function updateEventDisplay() {
 
         let dateText = `${dateStr}, ${startTimeStr} Uhr`;
 
-        // Add end time if available
+        // Add end date/time if available
         if (event.eventDateEnd) {
             const endDate = new Date(event.eventDateEnd);
-            const endTimeStr = endDate.toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            dateText += ` - ${endTimeStr} Uhr`;
+
+            // Check if end date is on a different day
+            const isSameDay = startDate.toDateString() === endDate.toDateString();
+
+            if (isSameDay) {
+                // Same day: just show end time
+                const endTimeStr = endDate.toLocaleTimeString('de-DE', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                dateText += ` - ${endTimeStr} Uhr`;
+            } else {
+                // Different day: show full end date
+                const endDateStr = endDate.toLocaleDateString('de-DE', {
+                    weekday: 'long',
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const endTimeStr = endDate.toLocaleTimeString('de-DE', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                dateText += ` bis ${endDateStr}, ${endTimeStr} Uhr`;
+            }
         }
 
         document.getElementById('event-date-hero').textContent = dateText;
@@ -1261,5 +1281,99 @@ document.addEventListener('DOMContentLoaded', () => {
                 showAuthScreen();
             }
         });
+    }
+
+    // ============================================
+    // BURGER MENU
+    // ============================================
+    const burgerBtn = document.getElementById('burger-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+    const mobileHelpBtn = document.getElementById('mobile-help-btn');
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+
+    // Open mobile menu
+    if (burgerBtn) {
+        burgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+    }
+
+    // Close mobile menu
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+    }
+
+    // Mobile navigation items
+    mobileNavItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const tabName = item.getAttribute('data-mobile-tab');
+
+            // Update active state in mobile menu
+            mobileNavItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            // Switch to the corresponding tab
+            const desktopTabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (desktopTabBtn) {
+                desktopTabBtn.click();
+            }
+
+            // Close mobile menu
+            mobileMenu.classList.remove('active');
+        });
+    });
+
+    // Mobile help button
+    if (mobileHelpBtn) {
+        mobileHelpBtn.addEventListener('click', () => {
+            const helpBtn = document.getElementById('help-btn');
+            if (helpBtn) {
+                helpBtn.click();
+            }
+            mobileMenu.classList.remove('active');
+        });
+    }
+
+    // Mobile logout button
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', () => {
+            if (confirm('Wirklich abmelden?')) {
+                clearToken();
+                showAuthScreen();
+                mobileMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (mobileMenu.classList.contains('active') &&
+            !mobileMenu.contains(e.target) &&
+            !burgerBtn.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+        }
+    });
+
+    // Update mobile menu admin visibility when user logs in
+    const updateMobileAdminNav = () => {
+        const desktopAdminTab = document.getElementById('admin-tab-btn');
+        const mobileAdminNav = document.getElementById('mobile-admin-nav');
+        if (desktopAdminTab && mobileAdminNav) {
+            mobileAdminNav.style.display = desktopAdminTab.style.display;
+        }
+    };
+
+    // Call on init and whenever admin tab visibility changes
+    updateMobileAdminNav();
+
+    // Observe changes to admin tab visibility
+    const desktopAdminTab = document.getElementById('admin-tab-btn');
+    if (desktopAdminTab) {
+        const observer = new MutationObserver(updateMobileAdminNav);
+        observer.observe(desktopAdminTab, { attributes: true, attributeFilter: ['style'] });
     }
 });
