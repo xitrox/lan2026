@@ -1485,18 +1485,30 @@ body {
     flex: 1;
 }
 
-/* Hide desktop tab nav on mobile, show on desktop */
+/* Desktop/Mobile visibility helpers */
+.desktop-only {
+    display: inline-block;
+}
+
+.mobile-only {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
+    }
+
     .tab-nav {
         display: none;
     }
 }
 
 @media (min-width: 769px) {
-    .burger-btn {
-        display: none;
-    }
-
     .mobile-menu {
         display: none !important;
     }
