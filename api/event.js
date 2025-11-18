@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     // GET EVENT DATA
     if (method === 'GET' && action === 'get') {
       const result = await sql`
-        SELECT id, title, event_date, location, max_participants, created_at, updated_at
+        SELECT id, title, event_date, event_date_end, location, max_participants, created_at, updated_at
         FROM event_data
         LIMIT 1
       `;
@@ -37,6 +37,7 @@ module.exports = async (req, res) => {
           id: eventData.id,
           title: eventData.title,
           eventDate: eventData.event_date,
+          eventDateEnd: eventData.event_date_end,
           location: eventData.location,
           maxParticipants: eventData.max_participants,
           registeredParticipants: parseInt(usersCount.rows[0].count)
@@ -51,7 +52,7 @@ module.exports = async (req, res) => {
         return res.status(adminCheck.status).json({ error: adminCheck.error });
       }
 
-      const { title, eventDate, location, maxParticipants, registrationPassword } = req.body;
+      const { title, eventDate, eventDateEnd, location, maxParticipants, registrationPassword } = req.body;
 
       const updates = [];
       const values = [];
@@ -64,6 +65,10 @@ module.exports = async (req, res) => {
       if (eventDate !== undefined) {
         updates.push(`event_date = $${paramCount++}`);
         values.push(eventDate ? new Date(eventDate) : null);
+      }
+      if (eventDateEnd !== undefined) {
+        updates.push(`event_date_end = $${paramCount++}`);
+        values.push(eventDateEnd ? new Date(eventDateEnd) : null);
       }
       if (location !== undefined) {
         updates.push(`location = $${paramCount++}`);
@@ -90,7 +95,7 @@ module.exports = async (req, res) => {
       );
 
       const result = await sql`
-        SELECT id, title, event_date, location, max_participants, updated_at
+        SELECT id, title, event_date, event_date_end, location, max_participants, updated_at
         FROM event_data
         LIMIT 1
       `;
@@ -102,6 +107,7 @@ module.exports = async (req, res) => {
           id: result.rows[0].id,
           title: result.rows[0].title,
           eventDate: result.rows[0].event_date,
+          eventDateEnd: result.rows[0].event_date_end,
           location: result.rows[0].location,
           maxParticipants: result.rows[0].max_participants
         }

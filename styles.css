@@ -364,6 +364,14 @@ body {
     display: flex;
     gap: 0;
     overflow-x: auto;
+    overflow-y: hidden;
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.tab-list::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
 }
 
 .tab-btn {

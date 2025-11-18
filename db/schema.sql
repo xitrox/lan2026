@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS event_data (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL DEFAULT 'LAN Party 2026',
     event_date TIMESTAMP,
+    event_date_end TIMESTAMP,
     location VARCHAR(255),
     max_participants INTEGER DEFAULT 30,
     registration_password VARCHAR(255) NOT NULL DEFAULT 'lanparty2026',

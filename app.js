@@ -406,6 +406,7 @@ tabButtons.forEach(btn => {
         // Load data if needed
         if (tabName === 'admin') {
             loadAdminUsers();
+            loadAdminEventForm();
         } else if (tabName === 'profile') {
             loadProfileForm();
         }
@@ -442,12 +443,24 @@ function updateEventDisplay() {
             month: 'long',
             year: 'numeric'
         });
-        const timeStr = startDate.toLocaleTimeString('de-DE', {
+        const startTimeStr = startDate.toLocaleTimeString('de-DE', {
             hour: '2-digit',
             minute: '2-digit'
         });
 
-        document.getElementById('event-date-hero').textContent = `${dateStr}, ab ${timeStr} Uhr`;
+        let dateText = `${dateStr}, ${startTimeStr} Uhr`;
+
+        // Add end time if available
+        if (event.eventDateEnd) {
+            const endDate = new Date(event.eventDateEnd);
+            const endTimeStr = endDate.toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            dateText += ` - ${endTimeStr} Uhr`;
+        }
+
+        document.getElementById('event-date-hero').textContent = dateText;
         updateCountdown(startDate);
     } else {
         document.getElementById('event-date-hero').textContent = 'Termin wird noch bekannt gegeben';
@@ -836,6 +849,30 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
 // ============================================
 // ADMIN
 // ============================================
+function loadAdminEventForm() {
+    if (!AppState.isAdmin || !AppState.eventData) return;
+
+    const event = AppState.eventData;
+
+    document.getElementById('admin-event-title').value = event.title || '';
+    document.getElementById('admin-event-location').value = event.location || '';
+    document.getElementById('admin-event-password').value = ''; // Don't show password
+
+    // Format date for datetime-local input (helper function)
+    const formatDateTimeLocal = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.getFullYear() + '-' +
+            String(date.getMonth() + 1).padStart(2, '0') + '-' +
+            String(date.getDate()).padStart(2, '0') + 'T' +
+            String(date.getHours()).padStart(2, '0') + ':' +
+            String(date.getMinutes()).padStart(2, '0');
+    };
+
+    document.getElementById('admin-event-date').value = formatDateTimeLocal(event.eventDate);
+    document.getElementById('admin-event-date-end').value = formatDateTimeLocal(event.eventDateEnd);
+}
+
 async function loadAdminUsers() {
     if (!AppState.isAdmin) return;
 
@@ -925,6 +962,7 @@ document.getElementById('admin-event-form').addEventListener('submit', async (e)
 
     const title = document.getElementById('admin-event-title').value;
     const dateValue = document.getElementById('admin-event-date').value;
+    const dateEndValue = document.getElementById('admin-event-date-end').value;
     const location = document.getElementById('admin-event-location').value;
     const password = document.getElementById('admin-event-password').value;
 
@@ -932,6 +970,7 @@ document.getElementById('admin-event-form').addEventListener('submit', async (e)
         await API.updateEventData({
             title,
             eventDate: dateValue ? new Date(dateValue).toISOString() : null,
+            eventDateEnd: dateEndValue ? new Date(dateEndValue).toISOString() : null,
             location,
             registrationPassword: password || undefined
         });
