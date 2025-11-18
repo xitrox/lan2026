@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
       }
 
       const result = await sql`
-        SELECT id, username, email, password_hash, is_admin
+        SELECT id, username, email, password_hash, is_admin, is_attending
         FROM users WHERE username = ${username}
       `;
 
@@ -40,7 +40,8 @@ module.exports = async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
-          isAdmin: user.is_admin
+          isAdmin: user.is_admin,
+          isAttending: user.is_attending || false
         },
         token
       });
@@ -130,7 +131,7 @@ module.exports = async (req, res) => {
       }
 
       const result = await sql`
-        SELECT id, username, email, is_admin
+        SELECT id, username, email, is_admin, is_attending
         FROM users WHERE id = ${auth.user.userId}
       `;
 
@@ -146,7 +147,8 @@ module.exports = async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
-          isAdmin: user.is_admin
+          isAdmin: user.is_admin,
+          isAttending: user.is_attending || false
         }
       });
     }
@@ -159,14 +161,14 @@ module.exports = async (req, res) => {
         return res.status(401).json({ error: 'Nicht authentifiziert' });
       }
 
-      const { email, currentPassword, newPassword } = req.body;
+      const { email, currentPassword, newPassword, isAttending } = req.body;
 
-      if (!email && !newPassword) {
-        return res.status(400).json({ error: 'E-Mail oder neues Passwort erforderlich' });
+      if (!email && !newPassword && isAttending === undefined) {
+        return res.status(400).json({ error: 'E-Mail, neues Passwort oder Teilnahme-Status erforderlich' });
       }
 
       const userResult = await sql`
-        SELECT id, username, email, password_hash
+        SELECT id, username, email, password_hash, is_attending
         FROM users WHERE id = ${auth.user.userId}
       `;
 
@@ -217,6 +219,11 @@ module.exports = async (req, res) => {
         values.push(newPasswordHash);
       }
 
+      if (isAttending !== undefined) {
+        updates.push(`is_attending = $${paramCount++}`);
+        values.push(isAttending);
+      }
+
       if (updates.length > 0) {
         values.push(auth.user.userId);
         await sql.query(
@@ -226,7 +233,7 @@ module.exports = async (req, res) => {
       }
 
       const updatedUser = await sql`
-        SELECT id, username, email, is_admin
+        SELECT id, username, email, is_admin, is_attending
         FROM users WHERE id = ${auth.user.userId}
       `;
 
@@ -237,7 +244,8 @@ module.exports = async (req, res) => {
           id: updatedUser.rows[0].id,
           username: updatedUser.rows[0].username,
           email: updatedUser.rows[0].email,
-          isAdmin: updatedUser.rows[0].is_admin
+          isAdmin: updatedUser.rows[0].is_admin,
+          isAttending: updatedUser.rows[0].is_attending || false
         }
       });
     }

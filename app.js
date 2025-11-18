@@ -68,10 +68,10 @@ const API = {
         return this.request('/api/auth?action=verify');
     },
 
-    async updateProfile(email, currentPassword, newPassword) {
+    async updateProfile(email, currentPassword, newPassword, isAttending) {
         return this.request('/api/auth?action=update-profile', {
             method: 'POST',
-            body: JSON.stringify({ email, currentPassword, newPassword })
+            body: JSON.stringify({ email, currentPassword, newPassword, isAttending })
         });
     },
 
@@ -521,16 +521,19 @@ function updateCountdown(targetDate) {
 async function loadParticipantsList() {
     try {
         const response = await API.getUsers();
-        const users = response.users;
+        const allUsers = response.users;
+
+        // Filter to show only users who are attending
+        const attendingUsers = allUsers.filter(user => user.is_attending);
 
         const listContainer = document.getElementById('participants-list');
 
-        if (users.length === 0) {
+        if (attendingUsers.length === 0) {
             listContainer.innerHTML = '<div class="participant-item">Noch keine Teilnehmer</div>';
             return;
         }
 
-        listContainer.innerHTML = users.map(user => `
+        listContainer.innerHTML = attendingUsers.map(user => `
             <div class="participant-item">
                 <span class="participant-avatar">${user.username.charAt(0).toUpperCase()}</span>
                 <span class="participant-name">${user.username}</span>
@@ -814,6 +817,7 @@ setInterval(() => {
 function loadProfileForm() {
     document.getElementById('profile-username').value = AppState.user.username;
     document.getElementById('profile-email').value = AppState.user.email;
+    document.getElementById('profile-is-attending').checked = AppState.user.isAttending || false;
     document.getElementById('profile-current-password').value = '';
     document.getElementById('profile-new-password').value = '';
 }
@@ -824,6 +828,7 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
     const email = document.getElementById('profile-email').value;
     const currentPassword = document.getElementById('profile-current-password').value;
     const newPassword = document.getElementById('profile-new-password').value;
+    const isAttending = document.getElementById('profile-is-attending').checked;
     const messageDiv = document.getElementById('profile-message');
 
     // Check if changing password
@@ -835,7 +840,13 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
     }
 
     try {
-        await API.updateProfile(email, currentPassword || undefined, newPassword || undefined);
+        const response = await API.updateProfile(
+            email,
+            currentPassword || undefined,
+            newPassword || undefined,
+            isAttending
+        );
+
         messageDiv.textContent = 'Profil erfolgreich aktualisiert';
         messageDiv.className = 'form-response success';
         messageDiv.style.display = 'block';
@@ -844,8 +855,12 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
         document.getElementById('profile-current-password').value = '';
         document.getElementById('profile-new-password').value = '';
 
-        // Update user email in state
+        // Update user data in state
         AppState.user.email = email;
+        AppState.user.isAttending = response.user.isAttending;
+
+        // Reload event data to update participant count
+        await loadEventData();
 
         setTimeout(() => {
             messageDiv.style.display = 'none';
