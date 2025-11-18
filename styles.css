@@ -1432,7 +1432,7 @@ body {
     box-shadow: -4px 0 16px rgba(0, 0, 0, 0.3);
     z-index: 1000;
     transition: right 0.3s ease;
-    display: flex;
+    display: none; /* Hidden by default */
     flex-direction: column;
 }
 
@@ -1566,6 +1566,10 @@ body {
 
     .tab-nav {
         display: none;
+    }
+
+    .mobile-menu {
+        display: flex; /* Show on mobile */
     }
 }
 
