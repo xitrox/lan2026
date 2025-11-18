@@ -5,7 +5,10 @@
   "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "db:migrate": "node db/migrate.js",
+    "db:seed": "node db/seed.js",
+    "db:setup": "npm run db:migrate && npm run db:seed"
   },
   "keywords": [
     "lan-party",
@@ -16,11 +19,13 @@
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
+    "dotenv": "^17.2.3",
     "vercel": "^33.0.0"
   },
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
     "bcrypt": "^6.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
   }
 }
