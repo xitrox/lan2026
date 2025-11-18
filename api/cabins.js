@@ -1,5 +1,5 @@
 // Consolidated Cabins API
-const { sql } = require('@vercel/postgres');
+const { sql } = require('../lib/db');
 const { authenticateRequest, requireAdmin } = require('../lib/auth');
 
 module.exports = async (req, res) => {

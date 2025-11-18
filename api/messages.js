@@ -1,5 +1,5 @@
 // Consolidated Messages API
-const { sql } = require('@vercel/postgres');
+const { sql } = require('../lib/db');
 const { authenticateRequest } = require('../lib/auth');
 
 module.exports = async (req, res) => {
