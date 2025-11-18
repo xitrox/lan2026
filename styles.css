@@ -1430,14 +1430,20 @@ body {
     background: var(--color-white);
     border-left: 3px solid var(--color-primary);
     box-shadow: -4px 0 16px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+    z-index: -1;
     transition: right 0.3s ease;
     display: none; /* Hidden by default */
     flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .mobile-menu.active {
     right: 0;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .mobile-menu-header {
@@ -1570,12 +1576,17 @@ body {
 
     .mobile-menu {
         display: flex; /* Show on mobile */
+        z-index: 1000; /* Bring to front on mobile */
     }
 }
 
 @media (min-width: 769px) {
     .mobile-menu {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
     }
 }
 
