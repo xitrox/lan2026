@@ -404,9 +404,7 @@ tabButtons.forEach(btn => {
         document.getElementById(`tab-${tabName}`).classList.add('active');
 
         // Load data if needed
-        if (tabName === 'chat') {
-            scrollChatToBottom();
-        } else if (tabName === 'admin') {
+        if (tabName === 'admin') {
             loadAdminUsers();
         } else if (tabName === 'profile') {
             loadProfileForm();
@@ -779,10 +777,9 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
     }
 });
 
-// Auto-refresh messages every 10 seconds
+// Auto-refresh messages every 10 seconds (chat is always visible now)
 setInterval(() => {
-    const chatTab = document.getElementById('tab-chat');
-    if (chatTab.classList.contains('active')) {
+    if (AppState.user) {
         loadMessages();
     }
 }, 10000);
@@ -1011,6 +1008,203 @@ document.getElementById('add-game-form').addEventListener('submit', async (e) =>
         await loadGames();
     } catch (error) {
         alert('Fehler: ' + error.message);
+    }
+});
+
+// ============================================
+// VOICE MENU (Easter Egg - Press V)
+// ============================================
+const VoiceMenu = {
+    isOpen: false,
+    currentCategory: null,
+
+    // ET Voice Commands Structure
+    commands: {
+        statements: [
+            { key: '1', text: 'I am a soldier!', sound: 'soldier.wav' },
+            { key: '2', text: 'I am an engineer!', sound: 'engineer.wav' },
+            { key: '3', text: 'I am a medic!', sound: 'medic.wav' },
+            { key: '4', text: 'I am a field ops!', sound: 'fieldops.wav' },
+            { key: '5', text: 'I am a covert ops!', sound: 'covertops.wav' },
+            { key: '6', text: 'Enemy in disguise!', sound: 'disguise.wav' },
+            { key: '7', text: 'Mines spotted!', sound: 'mines.wav' }
+        ],
+        requests: [
+            { key: '1', text: 'Need a medic!', sound: 'needmedic.wav' },
+            { key: '2', text: 'Need ammo!', sound: 'needammo.wav' },
+            { key: '3', text: 'Need backup!', sound: 'needbackup.wav' },
+            { key: '4', text: 'Need an engineer!', sound: 'needengineer.wav' },
+            { key: '5', text: 'Cover me!', sound: 'coverme.wav' },
+            { key: '6', text: 'Hold fire!', sound: 'holdfire.wav' },
+            { key: '7', text: 'Where to?', sound: 'whereto.wav' }
+        ],
+        commands: [
+            { key: '1', text: 'Follow me!', sound: 'followme.wav' },
+            { key: '2', text: 'Lets go!', sound: 'letsgo.wav' },
+            { key: '3', text: 'Move!', sound: 'move.wav' },
+            { key: '4', text: 'Clear the path!', sound: 'clearpath.wav' },
+            { key: '5', text: 'Defend objective!', sound: 'defendobjective.wav' },
+            { key: '6', text: 'Disarm dynamite!', sound: 'disarmdynamite.wav' },
+            { key: '7', text: 'Fire in the hole!', sound: 'fireinhole.wav' }
+        ],
+        responses: [
+            { key: '1', text: 'Yes!', sound: 'yes.wav' },
+            { key: '2', text: 'No!', sound: 'no.wav' },
+            { key: '3', text: 'Thanks!', sound: 'thanks.wav' },
+            { key: '4', text: 'Sorry!', sound: 'sorry.wav' },
+            { key: '5', text: 'Oops!', sound: 'oops.wav' },
+            { key: '6', text: 'On my way!', sound: 'onmyway.wav' },
+            { key: '7', text: 'Acknowledged!', sound: 'acknowledged.wav' }
+        ],
+        reactions: [
+            { key: '1', text: 'Great shot!', sound: 'greatshot.wav' },
+            { key: '2', text: 'Nice work!', sound: 'nicework.wav' },
+            { key: '3', text: 'Good game!', sound: 'goodgame.wav' },
+            { key: '4', text: 'Hi!', sound: 'hi.wav' },
+            { key: '5', text: 'Bye!', sound: 'bye.wav' },
+            { key: '6', text: 'Cheer!', sound: 'cheer.wav' },
+            { key: '7', text: 'You idiot!', sound: 'idiot.wav' }
+        ]
+    },
+
+    open() {
+        if (!AppState.user) return; // Only when logged in
+        this.isOpen = true;
+        this.currentCategory = null;
+        document.getElementById('voice-menu').style.display = 'flex';
+        document.getElementById('voice-categories').style.display = 'flex';
+        document.getElementById('voice-submenu').style.display = 'none';
+    },
+
+    close() {
+        this.isOpen = false;
+        this.currentCategory = null;
+        document.getElementById('voice-menu').style.display = 'none';
+    },
+
+    selectCategory(category) {
+        this.currentCategory = category;
+        this.showSubmenu(category);
+    },
+
+    showSubmenu(category) {
+        const submenu = document.getElementById('voice-submenu');
+        const commands = this.commands[category];
+
+        submenu.innerHTML = commands.map(cmd => `
+            <div class="voice-command" data-sound="${cmd.sound}">
+                <span class="voice-number">${cmd.key}</span>
+                <span class="voice-label">${cmd.text}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('voice-categories').style.display = 'none';
+        submenu.style.display = 'flex';
+
+        // Add click listeners
+        submenu.querySelectorAll('.voice-command').forEach(cmd => {
+            cmd.addEventListener('click', () => {
+                this.executeCommand(cmd.dataset.sound, cmd.querySelector('.voice-label').textContent);
+            });
+        });
+    },
+
+    back() {
+        if (this.currentCategory) {
+            this.currentCategory = null;
+            document.getElementById('voice-categories').style.display = 'flex';
+            document.getElementById('voice-submenu').style.display = 'none';
+        } else {
+            this.close();
+        }
+    },
+
+    executeCommand(soundFile, text) {
+        // Play sound
+        this.playSound(soundFile);
+
+        // Post to chat
+        API.postMessage(`[Voice] ${text}`)
+            .then(() => {
+                loadMessages(); // Chat is always visible now
+            })
+            .catch(err => console.error('Failed to post voice command:', err));
+
+        this.close();
+    },
+
+    playSound(soundFile) {
+        // Try to play sound from /sounds/et/ directory
+        const audio = new Audio(`/sounds/et/${soundFile}`);
+        audio.volume = 0.7;
+        audio.play().catch(err => {
+            console.log('Sound file not found:', soundFile);
+            // Fallback: just console log if sound not available
+        });
+    },
+
+    handleNumberKey(num) {
+        if (!this.currentCategory) {
+            // Select category
+            const categories = ['statements', 'requests', 'commands', 'responses', 'reactions'];
+            if (num >= 1 && num <= categories.length) {
+                this.selectCategory(categories[num - 1]);
+            }
+        } else {
+            // Execute command
+            const commands = this.commands[this.currentCategory];
+            const cmd = commands.find(c => c.key === String(num));
+            if (cmd) {
+                this.executeCommand(cmd.sound, cmd.text);
+            }
+        }
+    }
+};
+
+// Category click handlers
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.voice-category').forEach(cat => {
+        cat.addEventListener('click', () => {
+            VoiceMenu.selectCategory(cat.dataset.category);
+        });
+    });
+
+    // Close on overlay click
+    document.querySelector('.voice-menu-overlay')?.addEventListener('click', () => {
+        VoiceMenu.close();
+    });
+});
+
+// Global keyboard handler
+document.addEventListener('keydown', (e) => {
+    // Don't trigger if typing in input field
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+
+    // V key - toggle voice menu
+    if (e.key.toLowerCase() === 'v' && !VoiceMenu.isOpen) {
+        e.preventDefault();
+        VoiceMenu.open();
+        return;
+    }
+
+    // If voice menu is open
+    if (VoiceMenu.isOpen) {
+        // ESC - close or go back
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            VoiceMenu.back();
+            return;
+        }
+
+        // Number keys 1-7
+        const num = parseInt(e.key);
+        if (!isNaN(num) && num >= 1 && num <= 7) {
+            e.preventDefault();
+            VoiceMenu.handleNumberKey(num);
+            return;
+        }
     }
 });
 

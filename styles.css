@@ -338,6 +338,17 @@ body {
 }
 
 /* ============================================
+   MESSAGE BOARD (Prominent Section)
+   ============================================ */
+.message-board-section {
+    background: linear-gradient(to bottom, var(--color-off-white), var(--color-cream));
+    padding: 40px 0;
+    position: relative;
+    z-index: 5;
+    border-bottom: 3px solid var(--color-primary);
+}
+
+/* ============================================
    TAB NAVIGATION
    ============================================ */
 .tab-nav {
@@ -1177,6 +1188,139 @@ body {
     font-size: 1rem;
 }
 
+/* ============================================ */
+/* VOICE MENU (Easter Egg) */
+/* ============================================ */
+.voice-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.voice-menu-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+}
+
+.voice-menu-container {
+    position: relative;
+    z-index: 2001;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+    border: 3px solid var(--color-accent);
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.voice-menu-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-bottom: 2px solid var(--color-accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.voice-menu-title {
+    color: var(--color-white);
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.voice-menu-hint {
+    color: var(--color-light-gray);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.voice-menu-categories,
+.voice-submenu {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.voice-category,
+.voice-command {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--color-white);
+}
+
+.voice-category:hover,
+.voice-command:hover {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: var(--color-accent);
+    transform: translateX(5px);
+}
+
+.voice-number {
+    background: var(--color-accent);
+    color: var(--color-white);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.voice-label {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Voice menu scrollbar */
+.voice-menu-categories::-webkit-scrollbar,
+.voice-submenu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.voice-menu-categories::-webkit-scrollbar-track,
+.voice-submenu::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.voice-menu-categories::-webkit-scrollbar-thumb,
+.voice-submenu::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 4px;
+}
+
+.voice-menu-categories::-webkit-scrollbar-thumb:hover,
+.voice-submenu::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
 @media (max-width: 768px) {
     .countdown-number {
         font-size: 2rem;
@@ -1190,5 +1334,21 @@ body {
     .countdown-separator {
         font-size: 1.5rem;
         margin: 0 0.25rem;
+    }
+
+    .voice-menu-container {
+        width: 95%;
+    }
+
+    .voice-menu-title {
+        font-size: 1.2rem;
+    }
+
+    .voice-menu-hint {
+        font-size: 0.75rem;
+    }
+
+    .voice-label {
+        font-size: 1rem;
     }
 }

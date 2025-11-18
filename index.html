@@ -171,13 +171,30 @@
             </div>
         </section>
 
+        <!-- Message Board (Prominent) -->
+        <section class="message-board-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">💬 Message Board</h2>
+                </div>
+                <div class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <input type="text" id="chat-input" class="chat-input" placeholder="Nachricht eingeben... (^1 für Farben)" maxlength="1024">
+                        <button id="chat-send-btn" class="chat-send-btn">Senden</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Navigation Tabs -->
         <nav class="tab-nav">
             <div class="container">
                 <div class="tab-list">
                     <button class="tab-btn active" data-tab="cabins">🏠 Unterkünfte</button>
                     <button class="tab-btn" data-tab="games">🎮 Spiele</button>
-                    <button class="tab-btn" data-tab="chat">💬 Chat</button>
                     <button class="tab-btn" data-tab="profile">👤 Profil</button>
                     <button id="admin-tab-btn" class="tab-btn" data-tab="admin" style="display: none;">⚙️ Admin</button>
                 </div>
@@ -207,22 +224,6 @@
                     </div>
                     <div id="games-list" class="games-list">
                         <p>Lädt...</p>
-                    </div>
-                </div>
-
-                <!-- Chat Tab -->
-                <div id="tab-chat" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">Message Board</h2>
-                    </div>
-                    <div class="chat-container">
-                        <div id="chat-messages" class="chat-messages">
-                            <!-- Messages will be loaded here -->
-                        </div>
-                        <div class="chat-input-wrapper">
-                            <input type="text" id="chat-input" class="chat-input" placeholder="Nachricht eingeben... (^1 für Farben)" maxlength="1024">
-                            <button id="chat-send-btn" class="chat-send-btn">Senden</button>
-                        </div>
                     </div>
                 </div>
 
@@ -388,6 +389,46 @@
                     </div>
                     <button type="submit" class="submit-btn">Hinzufügen</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Menu (Easter Egg - Press V) -->
+    <div id="voice-menu" class="voice-menu" style="display: none;">
+        <div class="voice-menu-overlay"></div>
+        <div class="voice-menu-container">
+            <div class="voice-menu-header">
+                <span class="voice-menu-title">VOICE COMMANDS</span>
+                <span class="voice-menu-hint">Drücke ESC zum Schließen</span>
+            </div>
+
+            <!-- Main Categories -->
+            <div id="voice-categories" class="voice-menu-categories">
+                <div class="voice-category" data-category="statements">
+                    <span class="voice-number">1</span>
+                    <span class="voice-label">Statements</span>
+                </div>
+                <div class="voice-category" data-category="requests">
+                    <span class="voice-number">2</span>
+                    <span class="voice-label">Requests</span>
+                </div>
+                <div class="voice-category" data-category="commands">
+                    <span class="voice-number">3</span>
+                    <span class="voice-label">Commands</span>
+                </div>
+                <div class="voice-category" data-category="responses">
+                    <span class="voice-number">4</span>
+                    <span class="voice-label">Responses</span>
+                </div>
+                <div class="voice-category" data-category="reactions">
+                    <span class="voice-number">5</span>
+                    <span class="voice-label">Reactions</span>
+                </div>
+            </div>
+
+            <!-- Sub Menu (shown when category selected) -->
+            <div id="voice-submenu" class="voice-submenu" style="display: none;">
+                <!-- Populated dynamically -->
             </div>
         </div>
     </div>
