@@ -385,22 +385,17 @@ document.getElementById('register-form-element').addEventListener('submit', asyn
 // PAGE NAVIGATION (Replaces old tab system)
 // ============================================
 
-// Get all screens
-const appScreen = document.getElementById('app-screen');
-const cabinsScreen = document.getElementById('cabins-screen');
-const gamesScreen = document.getElementById('games-screen');
-const profileScreen = document.getElementById('profile-screen');
-const adminScreen = document.getElementById('admin-screen');
-const settingsScreen = document.getElementById('settings-screen');
-
-const allScreens = [appScreen, cabinsScreen, gamesScreen, profileScreen, adminScreen, settingsScreen];
+// These will be initialized after DOM loads
+let appScreen, cabinsScreen, gamesScreen, profileScreen, adminScreen, settingsScreen, allScreens;
 
 // Navigate to a specific page
 function navigateTo(pageName) {
     // Hide all screens
-    allScreens.forEach(screen => {
-        if (screen) screen.style.display = 'none';
-    });
+    if (allScreens) {
+        allScreens.forEach(screen => {
+            if (screen) screen.style.display = 'none';
+        });
+    }
 
     // Show requested screen
     let targetScreen = null;
@@ -443,14 +438,6 @@ function navigateTo(pageName) {
         mobileMenu.classList.remove('active');
     }
 }
-
-// Back buttons on all pages
-document.querySelectorAll('.page-back-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const target = e.target.closest('.page-back-btn').getAttribute('data-navigate');
-        navigateTo(target || 'home');
-    });
-});
 
 // ============================================
 // EVENT DATA
@@ -1315,6 +1302,23 @@ document.addEventListener('keydown', (e) => {
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize screen references now that DOM is loaded
+    appScreen = document.getElementById('app-screen');
+    cabinsScreen = document.getElementById('cabins-screen');
+    gamesScreen = document.getElementById('games-screen');
+    profileScreen = document.getElementById('profile-screen');
+    adminScreen = document.getElementById('admin-screen');
+    settingsScreen = document.getElementById('settings-screen');
+    allScreens = [appScreen, cabinsScreen, gamesScreen, profileScreen, adminScreen, settingsScreen];
+
+    // Initialize back buttons now that screens exist
+    document.querySelectorAll('.page-back-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const target = e.target.closest('.page-back-btn').getAttribute('data-navigate');
+            navigateTo(target || 'home');
+        });
+    });
+
     checkAuth();
 
     // Header button event listeners
@@ -1669,10 +1673,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // SETTINGS SCREEN
     // ============================================
 
-    const settingsScreen = document.getElementById('settings-screen');
-    const appScreen = document.getElementById('app-screen');
     const settingsBackBtn = document.getElementById('settings-back-btn');
-    const userMenuBtn = document.getElementById('user-menu-btn');
     const mobileSettingsBtn = document.getElementById('mobile-settings-btn');
     const saveSettingsBtn = document.getElementById('save-settings-btn');
 
