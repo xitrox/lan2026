@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2025-11-20-v3';
+const CACHE_VERSION = '2025-11-20-v4';
 const CACHE_NAME = `lan2026-${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
