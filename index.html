@@ -134,10 +134,11 @@
                 <button id="mobile-menu-close" class="mobile-menu-close">&times;</button>
             </div>
             <nav class="mobile-menu-nav">
-                <button class="mobile-nav-item" data-mobile-tab="cabins">🏠 Unterkünfte</button>
-                <button class="mobile-nav-item" data-mobile-tab="games">🎮 Spiele</button>
-                <button class="mobile-nav-item" data-mobile-tab="profile">👤 Profil</button>
-                <button id="mobile-admin-nav" class="mobile-nav-item" data-mobile-tab="admin" style="display: none;">⚙️ Admin</button>
+                <button class="mobile-nav-item" data-navigate="home">🏠 Home</button>
+                <button class="mobile-nav-item" data-navigate="cabins">🏕️ Unterkünfte</button>
+                <button class="mobile-nav-item" data-navigate="games">🎮 Spiele</button>
+                <button class="mobile-nav-item" data-navigate="profile">👤 Profil</button>
+                <button id="mobile-admin-nav" class="mobile-nav-item" data-navigate="admin" style="display: none;">⚙️ Admin</button>
             </nav>
             <div class="mobile-menu-actions">
                 <button id="mobile-settings-btn" class="mobile-action-btn">
@@ -218,142 +219,143 @@
             </div>
         </section>
 
-        <!-- Navigation Tabs -->
-        <nav class="tab-nav">
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CABINS SCREEN (Full Page) -->
+    <!-- ============================================ -->
+    <div id="cabins-screen" class="page-screen" style="display: none;">
+        <div class="page-header">
+            <button class="page-back-btn" data-navigate="home">← Home</button>
+            <h2 class="page-title">Unterkünfte</h2>
+            <button id="add-cabin-btn" class="icon-btn" style="display: none;">+</button>
+        </div>
+        <div class="page-content">
             <div class="container">
-                <div class="tab-list">
-                    <button class="tab-btn active" data-tab="cabins">🏠 Unterkünfte</button>
-                    <button class="tab-btn" data-tab="games">🎮 Spiele</button>
-                    <button class="tab-btn" data-tab="profile">👤 Profil</button>
-                    <button id="admin-tab-btn" class="tab-btn" data-tab="admin" style="display: none;">⚙️ Admin</button>
+                <div id="cabins-grid" class="cabins-grid">
+                    <p>Lädt...</p>
                 </div>
-            </div>
-        </nav>
-
-        <!-- Tab Content -->
-        <div class="tab-content-wrapper">
-            <div class="container">
-
-                <!-- Cabins Tab -->
-                <div id="tab-cabins" class="tab-content active">
-                    <div class="section-header">
-                        <h2 class="section-title">Unterkunfts-Abstimmung</h2>
-                        <button id="add-cabin-btn" class="add-btn" style="display: none;">+ Unterkunft hinzufügen</button>
-                    </div>
-                    <div id="cabins-grid" class="cabins-grid">
-                        <p>Lädt...</p>
-                    </div>
-                </div>
-
-                <!-- Games Tab -->
-                <div id="tab-games" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">Spiele-Abstimmung</h2>
-                        <button id="add-game-btn" class="add-btn">+ Spiel hinzufügen</button>
-                    </div>
-                    <div id="games-list" class="games-list">
-                        <p>Lädt...</p>
-                    </div>
-                </div>
-
-                <!-- Profile Tab -->
-                <div id="tab-profile" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">Profil bearbeiten</h2>
-                    </div>
-                    <div class="profile-form-container">
-                        <form id="profile-form">
-                            <div class="form-group">
-                                <label for="profile-username" class="form-label">Benutzername</label>
-                                <input type="text" id="profile-username" class="form-input" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="profile-email" class="form-label">E-Mail</label>
-                                <input type="email" id="profile-email" class="form-input" required>
-                            </div>
-                            <div class="form-group">
-                                <div class="attendance-toggle">
-                                    <label class="toggle-label">
-                                        <input type="checkbox" id="profile-is-attending" class="toggle-checkbox">
-                                        <span class="toggle-slider"></span>
-                                        <span class="toggle-text">Ich nehme am Event teil</span>
-                                    </label>
-                                    <small class="form-hint">Aktivieren, um in der Teilnehmerliste zu erscheinen</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Passwort ändern (optional)</label>
-                                <input type="password" id="profile-current-password" class="form-input" placeholder="Aktuelles Passwort" autocomplete="current-password">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" id="profile-new-password" class="form-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="new-password">
-                            </div>
-                            <button type="submit" class="submit-btn">
-                                <span class="btn-text">Profil aktualisieren</span>
-                                <span class="btn-icon">→</span>
-                            </button>
-                        </form>
-                        <div id="profile-message" class="form-response" style="display: none;"></div>
-                    </div>
-                </div>
-
-                <!-- Admin Tab -->
-                <div id="tab-admin" class="tab-content">
-                    <div class="section-header">
-                        <h2 class="section-title">Admin-Panel</h2>
-                    </div>
-
-                    <div class="admin-sections">
-                        <!-- Event Data Management -->
-                        <div class="admin-section">
-                            <h3 class="admin-section-title">Event-Stammdaten</h3>
-                            <form id="admin-event-form">
-                                <div class="form-group">
-                                    <label for="admin-event-title" class="form-label">Titel</label>
-                                    <input type="text" id="admin-event-title" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-event-date" class="form-label">Start (Datum & Uhrzeit)</label>
-                                    <input type="datetime-local" id="admin-event-date" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-event-date-end" class="form-label">Ende (Datum & Uhrzeit) - Optional</label>
-                                    <input type="datetime-local" id="admin-event-date-end" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-event-location" class="form-label">Ort</label>
-                                    <input type="text" id="admin-event-location" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin-event-password" class="form-label">Registrierungspasswort</label>
-                                    <input type="text" id="admin-event-password" class="form-input">
-                                </div>
-                                <button type="submit" class="submit-btn">Speichern</button>
-                            </form>
-                        </div>
-
-                        <!-- User Management -->
-                        <div class="admin-section">
-                            <h3 class="admin-section-title">Benutzerverwaltung</h3>
-                            <div id="admin-users-list" class="admin-users-list">
-                                <p>Lädt...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
+    </div>
 
-        <!-- Footer -->
-        <footer class="footer">
+    <!-- ============================================ -->
+    <!-- GAMES SCREEN (Full Page) -->
+    <!-- ============================================ -->
+    <div id="games-screen" class="page-screen" style="display: none;">
+        <div class="page-header">
+            <button class="page-back-btn" data-navigate="home">← Home</button>
+            <h2 class="page-title">Spiele</h2>
+            <button id="add-game-btn" class="icon-btn">+</button>
+        </div>
+        <div class="page-content">
             <div class="container">
-                <div class="footer-content">
-                    <p class="footer-text">Operation Reunion 2026 • Enemy Territory Clan Reunion</p>
-                    <p class="footer-subtext">Mit Nostalgie und roten Pixeln gebaut</p>
+                <div id="games-list" class="games-list">
+                    <p>Lädt...</p>
                 </div>
             </div>
-        </footer>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PROFILE SCREEN (Full Page) -->
+    <!-- ============================================ -->
+    <div id="profile-screen" class="page-screen" style="display: none;">
+        <div class="page-header">
+            <button class="page-back-btn" data-navigate="home">← Home</button>
+            <h2 class="page-title">Profil</h2>
+            <button class="icon-btn" style="display: none;">+</button>
+        </div>
+        <div class="page-content">
+            <div class="container">
+                <div class="profile-form-container">
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="profile-username" class="form-label">Benutzername</label>
+                            <input type="text" id="profile-username" class="form-input" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email" class="form-label">E-Mail</label>
+                            <input type="email" id="profile-email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="attendance-toggle">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="profile-is-attending" class="toggle-checkbox">
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text">Ich nehme am Event teil</span>
+                                </label>
+                                <small class="form-hint">Aktivieren, um in der Teilnehmerliste zu erscheinen</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Passwort ändern (optional)</label>
+                            <input type="password" id="profile-current-password" class="form-input" placeholder="Aktuelles Passwort" autocomplete="current-password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="profile-new-password" class="form-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="new-password">
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Profil aktualisieren</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </form>
+                    <div id="profile-message" class="form-response" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ADMIN SCREEN (Full Page) -->
+    <!-- ============================================ -->
+    <div id="admin-screen" class="page-screen" style="display: none;">
+        <div class="page-header">
+            <button class="page-back-btn" data-navigate="home">← Home</button>
+            <h2 class="page-title">Admin</h2>
+            <button class="icon-btn" style="display: none;">+</button>
+        </div>
+        <div class="page-content">
+            <div class="container">
+                <div class="admin-sections">
+                    <!-- Event Data Management -->
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">Event-Stammdaten</h3>
+                        <form id="admin-event-form">
+                            <div class="form-group">
+                                <label for="admin-event-title" class="form-label">Titel</label>
+                                <input type="text" id="admin-event-title" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-event-date" class="form-label">Start (Datum & Uhrzeit)</label>
+                                <input type="datetime-local" id="admin-event-date" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-event-date-end" class="form-label">Ende (Datum & Uhrzeit) - Optional</label>
+                                <input type="datetime-local" id="admin-event-date-end" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-event-location" class="form-label">Ort</label>
+                                <input type="text" id="admin-event-location" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-event-password" class="form-label">Registrierungspasswort</label>
+                                <input type="text" id="admin-event-password" class="form-input">
+                            </div>
+                            <button type="submit" class="submit-btn">Speichern</button>
+                        </form>
+                    </div>
+
+                    <!-- User Management -->
+                    <div class="admin-section">
+                        <h3 class="admin-section-title">Benutzerverwaltung</h3>
+                        <div id="admin-users-list" class="admin-users-list">
+                            <p>Lädt...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================ -->

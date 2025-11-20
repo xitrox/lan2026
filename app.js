@@ -303,10 +303,18 @@ function showAppScreen() {
     // Update UI
     document.getElementById('user-display').textContent = AppState.user.username;
 
-    // Show admin tab if admin
+    // Show admin options if admin
     if (AppState.isAdmin) {
-        document.getElementById('admin-tab-btn').style.display = 'block';
-        document.getElementById('add-cabin-btn').style.display = 'inline-block';
+        // Show admin in mobile menu
+        const mobileAdminNav = document.getElementById('mobile-admin-nav');
+        if (mobileAdminNav) {
+            mobileAdminNav.style.display = 'block';
+        }
+        // Show add cabin button
+        const addCabinBtn = document.getElementById('add-cabin-btn');
+        if (addCabinBtn) {
+            addCabinBtn.style.display = 'inline-block';
+        }
     }
 
     // Load initial data
@@ -374,30 +382,73 @@ document.getElementById('register-form-element').addEventListener('submit', asyn
 });
 
 // ============================================
-// TAB NAVIGATION
+// PAGE NAVIGATION (Replaces old tab system)
 // ============================================
-const tabButtons = document.querySelectorAll('.tab-btn');
-const tabContents = document.querySelectorAll('.tab-content');
 
-tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const tabName = btn.dataset.tab;
+// Get all screens
+const appScreen = document.getElementById('app-screen');
+const cabinsScreen = document.getElementById('cabins-screen');
+const gamesScreen = document.getElementById('games-screen');
+const profileScreen = document.getElementById('profile-screen');
+const adminScreen = document.getElementById('admin-screen');
+const settingsScreen = document.getElementById('settings-screen');
 
-        // Remove active class from all
-        tabButtons.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
+const allScreens = [appScreen, cabinsScreen, gamesScreen, profileScreen, adminScreen, settingsScreen];
 
-        // Add active class to selected
-        btn.classList.add('active');
-        document.getElementById(`tab-${tabName}`).classList.add('active');
+// Navigate to a specific page
+function navigateTo(pageName) {
+    // Hide all screens
+    allScreens.forEach(screen => {
+        if (screen) screen.style.display = 'none';
+    });
 
-        // Load data if needed
-        if (tabName === 'admin') {
+    // Show requested screen
+    let targetScreen = null;
+    switch(pageName) {
+        case 'home':
+            targetScreen = appScreen;
+            break;
+        case 'cabins':
+            targetScreen = cabinsScreen;
+            loadCabins(); // Reload data
+            break;
+        case 'games':
+            targetScreen = gamesScreen;
+            loadGames(); // Reload data
+            break;
+        case 'profile':
+            targetScreen = profileScreen;
+            loadProfileForm(); // Load current profile
+            break;
+        case 'admin':
+            targetScreen = adminScreen;
             loadAdminUsers();
             loadAdminEventForm();
-        } else if (tabName === 'profile') {
-            loadProfileForm();
-        }
+            break;
+        case 'settings':
+            // Settings uses old showSettings() function
+            showSettings();
+            return;
+        default:
+            targetScreen = appScreen; // Default to home
+    }
+
+    if (targetScreen) {
+        targetScreen.style.display = 'block';
+    }
+
+    // Close mobile menu if open
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+        mobileMenu.classList.remove('active');
+    }
+}
+
+// Back buttons on all pages
+document.querySelectorAll('.page-back-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const target = e.target.closest('.page-back-btn').getAttribute('data-navigate');
+        navigateTo(target || 'home');
     });
 });
 
@@ -1337,20 +1388,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile navigation items
     mobileNavItems.forEach(item => {
         item.addEventListener('click', () => {
-            const tabName = item.getAttribute('data-mobile-tab');
+            const pageName = item.getAttribute('data-navigate');
 
             // Update active state in mobile menu
             mobileNavItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
 
-            // Switch to the corresponding tab
-            const desktopTabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-            if (desktopTabBtn) {
-                desktopTabBtn.click();
-            }
-
-            // Close mobile menu
-            mobileMenu.classList.remove('active');
+            // Navigate to page
+            navigateTo(pageName);
         });
     });
 
@@ -1385,24 +1430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Update mobile menu admin visibility when user logs in
-    const updateMobileAdminNav = () => {
-        const desktopAdminTab = document.getElementById('admin-tab-btn');
-        const mobileAdminNav = document.getElementById('mobile-admin-nav');
-        if (desktopAdminTab && mobileAdminNav) {
-            mobileAdminNav.style.display = desktopAdminTab.style.display;
-        }
-    };
-
-    // Call on init and whenever admin tab visibility changes
-    updateMobileAdminNav();
-
-    // Observe changes to admin tab visibility
-    const desktopAdminTab = document.getElementById('admin-tab-btn');
-    if (desktopAdminTab) {
-        const observer = new MutationObserver(updateMobileAdminNav);
-        observer.observe(desktopAdminTab, { attributes: true, attributeFilter: ['style'] });
-    }
+    // Admin menu visibility is now handled in showAppScreen()
 
     // ============================================
     // PWA & PUSH NOTIFICATIONS
