@@ -1597,4 +1597,193 @@ document.addEventListener('DOMContentLoaded', () => {
         originalShowAppScreen.apply(this, arguments);
         setTimeout(checkExistingSubscription, 500);
     };
+
+    // ============================================
+    // SETTINGS SCREEN
+    // ============================================
+
+    const settingsScreen = document.getElementById('settings-screen');
+    const appScreen = document.getElementById('app-screen');
+    const settingsBackBtn = document.getElementById('settings-back-btn');
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const mobileSettingsBtn = document.getElementById('mobile-settings-btn');
+    const saveSettingsBtn = document.getElementById('save-settings-btn');
+
+    // Show settings screen
+    function showSettings() {
+        // Load current user data
+        if (AppState.user) {
+            document.getElementById('settings-username').textContent = AppState.user.username;
+            document.getElementById('settings-email').value = AppState.user.email || '';
+            document.getElementById('settings-is-attending').checked = AppState.user.isAttending;
+        }
+
+        // Update notification UI elements in settings
+        updateSettingsNotificationUI();
+
+        // Hide app, show settings
+        appScreen.style.display = 'none';
+        settingsScreen.style.display = 'block';
+
+        // Close mobile menu if open
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu) {
+            mobileMenu.classList.remove('active');
+        }
+    }
+
+    // Hide settings screen
+    function hideSettings() {
+        settingsScreen.style.display = 'none';
+        appScreen.style.display = 'block';
+    }
+
+    // Update notification UI in settings screen
+    function updateSettingsNotificationUI() {
+        const unsupportedMsg = document.getElementById('settings-notification-unsupported');
+        const deniedMsg = document.getElementById('settings-notification-denied');
+        const enabledMsg = document.getElementById('settings-notification-enabled');
+        const disabledMsg = document.getElementById('settings-notification-disabled');
+        const enableBtn = document.getElementById('settings-enable-notifications-btn');
+        const preferencesDiv = document.getElementById('settings-notification-preferences');
+
+        // Hide all messages
+        [unsupportedMsg, deniedMsg, enabledMsg, disabledMsg].forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+
+        // Check support
+        if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+            if (unsupportedMsg) unsupportedMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+            return;
+        }
+
+        // Check permission
+        if (Notification.permission === 'denied') {
+            if (deniedMsg) deniedMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+            return;
+        }
+
+        if (Notification.permission === 'granted' && notificationSubscription) {
+            if (enabledMsg) enabledMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'block';
+        } else {
+            if (disabledMsg) disabledMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'block';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+        }
+    }
+
+    // Load notification preferences in settings
+    async function loadSettingsNotificationPreferences() {
+        try {
+            const { preferences } = await API.request('/api/notifications?action=preferences');
+
+            document.getElementById('settings-notify-chat').checked = preferences.chat;
+            document.getElementById('settings-notify-games').checked = preferences.games;
+            document.getElementById('settings-notify-accommodations').checked = preferences.accommodations;
+        } catch (error) {
+            console.error('Failed to load notification preferences:', error);
+        }
+    }
+
+    // Save all settings
+    async function saveSettings() {
+        try {
+            const email = document.getElementById('settings-email').value;
+            const isAttending = document.getElementById('settings-is-attending').checked;
+            const currentPassword = document.getElementById('settings-current-password').value;
+            const newPassword = document.getElementById('settings-new-password').value;
+
+            // Update profile
+            const updateData = { email, isAttending };
+
+            // Add password if provided
+            if (currentPassword && newPassword) {
+                updateData.currentPassword = currentPassword;
+                updateData.newPassword = newPassword;
+            }
+
+            await API.updateProfile(updateData);
+
+            // Save notification preferences if enabled
+            if (Notification.permission === 'granted' && notificationSubscription) {
+                const preferences = {
+                    chat: document.getElementById('settings-notify-chat').checked,
+                    games: document.getElementById('settings-notify-games').checked,
+                    accommodations: document.getElementById('settings-notify-accommodations').checked
+                };
+
+                await API.request('/api/notifications?action=preferences', {
+                    method: 'PUT',
+                    body: JSON.stringify(preferences)
+                });
+            }
+
+            // Clear password fields
+            document.getElementById('settings-current-password').value = '';
+            document.getElementById('settings-new-password').value = '';
+
+            // Update app state
+            AppState.user.email = email;
+            AppState.user.isAttending = isAttending;
+
+            showMessage('settings-message', 'Einstellungen erfolgreich gespeichert!', 'success');
+
+            // Refresh participant list if attendance changed
+            if (typeof loadParticipantsList === 'function') {
+                loadParticipantsList();
+            }
+
+        } catch (error) {
+            console.error('Failed to save settings:', error);
+            showMessage('settings-message', error.message || 'Fehler beim Speichern der Einstellungen', 'error');
+        }
+    }
+
+    // Event listeners
+    if (settingsBackBtn) {
+        settingsBackBtn.addEventListener('click', hideSettings);
+    }
+
+    if (userMenuBtn) {
+        userMenuBtn.addEventListener('click', showSettings);
+    }
+
+    if (mobileSettingsBtn) {
+        mobileSettingsBtn.addEventListener('click', showSettings);
+    }
+
+    if (saveSettingsBtn) {
+        saveSettingsBtn.addEventListener('click', saveSettings);
+    }
+
+    // Settings: Enable notifications button
+    const settingsEnableNotificationsBtn = document.getElementById('settings-enable-notifications-btn');
+    if (settingsEnableNotificationsBtn) {
+        settingsEnableNotificationsBtn.addEventListener('click', async () => {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                await subscribeToPushNotifications();
+                updateSettingsNotificationUI();
+                await loadSettingsNotificationPreferences();
+            } else {
+                updateSettingsNotificationUI();
+            }
+        });
+    }
+
+    // When opening settings, load notification preferences
+    const originalShowSettings = showSettings;
+    showSettings = function() {
+        originalShowSettings.apply(this, arguments);
+        if (Notification.permission === 'granted' && notificationSubscription) {
+            loadSettingsNotificationPreferences();
+        }
+    };
 });

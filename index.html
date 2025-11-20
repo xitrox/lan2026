@@ -140,6 +140,10 @@
                 <button id="mobile-admin-nav" class="mobile-nav-item" data-mobile-tab="admin" style="display: none;">⚙️ Admin</button>
             </nav>
             <div class="mobile-menu-actions">
+                <button id="mobile-settings-btn" class="mobile-action-btn">
+                    <span class="mobile-action-icon">⚙️</span>
+                    <span class="mobile-action-text">Einstellungen</span>
+                </button>
                 <button id="mobile-help-btn" class="mobile-action-btn">
                     <span class="mobile-action-icon">❓</span>
                     <span class="mobile-action-text">Hilfe</span>
@@ -306,66 +310,6 @@
                         </form>
                         <div id="profile-message" class="form-response" style="display: none;"></div>
                     </div>
-
-                    <!-- Notification Settings -->
-                    <div class="section-header" style="margin-top: 2rem;">
-                        <h2 class="section-title">Benachrichtigungs-Einstellungen</h2>
-                    </div>
-                    <div class="notification-settings-container">
-                        <div class="notification-status">
-                            <div id="notification-unsupported" class="notification-warning" style="display: none;">
-                                🔕 Push-Benachrichtigungen werden von diesem Browser nicht unterstützt
-                            </div>
-                            <div id="notification-denied" class="notification-warning" style="display: none;">
-                                🔕 Benachrichtigungen wurden blockiert. Bitte in den Browser-Einstellungen aktivieren.
-                            </div>
-                            <div id="notification-enabled" class="notification-success" style="display: none;">
-                                🔔 Push-Benachrichtigungen sind aktiviert
-                            </div>
-                            <div id="notification-disabled" class="notification-info" style="display: none;">
-                                🔕 Push-Benachrichtigungen sind deaktiviert
-                            </div>
-                        </div>
-
-                        <button id="enable-notifications-btn" class="notification-toggle-btn" style="display: none;">
-                            <span class="btn-text">Benachrichtigungen aktivieren</span>
-                            <span class="btn-icon">🔔</span>
-                        </button>
-
-                        <div id="notification-preferences" style="display: none;">
-                            <p class="form-hint" style="margin-bottom: 1rem;">Wähle aus, über welche Aktivitäten du benachrichtigt werden möchtest:</p>
-
-                            <div class="notification-preference-item">
-                                <label class="toggle-label">
-                                    <input type="checkbox" id="notify-chat" class="toggle-checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-text">💬 Neue Chat-Nachrichten</span>
-                                </label>
-                            </div>
-
-                            <div class="notification-preference-item">
-                                <label class="toggle-label">
-                                    <input type="checkbox" id="notify-games" class="toggle-checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-text">🎮 Neue Spiele hinzugefügt</span>
-                                </label>
-                            </div>
-
-                            <div class="notification-preference-item">
-                                <label class="toggle-label">
-                                    <input type="checkbox" id="notify-accommodations" class="toggle-checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                    <span class="toggle-text">🏠 Änderungen bei Unterkünften</span>
-                                </label>
-                            </div>
-
-                            <button id="save-notification-preferences-btn" class="submit-btn" style="margin-top: 1rem;">
-                                <span class="btn-text">Einstellungen speichern</span>
-                                <span class="btn-icon">→</span>
-                            </button>
-                            <div id="notification-preferences-message" class="form-response" style="display: none;"></div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Admin Tab -->
@@ -504,6 +448,117 @@
                     <button type="submit" class="submit-btn">Hinzufügen</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SETTINGS SCREEN -->
+    <!-- ============================================ -->
+    <div id="settings-screen" class="settings-screen" style="display: none;">
+        <div class="settings-header">
+            <button id="settings-back-btn" class="icon-btn" title="Zurück">
+                ← Zurück
+            </button>
+            <h2 class="settings-title">Einstellungen</h2>
+            <div style="width: 48px;"></div> <!-- Spacer for centering -->
+        </div>
+
+        <div class="settings-container">
+            <!-- Account Settings Section -->
+            <div class="settings-section">
+                <h3 class="settings-section-title">Account</h3>
+
+                <div class="settings-item">
+                    <div class="settings-item-label">Benutzername</div>
+                    <div id="settings-username" class="settings-item-value">-</div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-label">E-Mail</div>
+                    <input type="email" id="settings-email" class="settings-input">
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-item-label">Teilnahme am Event</div>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="settings-is-attending" class="toggle-checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Password Change Section -->
+            <div class="settings-section">
+                <h3 class="settings-section-title">Passwort ändern</h3>
+
+                <div class="settings-item">
+                    <input type="password" id="settings-current-password" class="settings-input" placeholder="Aktuelles Passwort" autocomplete="current-password">
+                </div>
+
+                <div class="settings-item">
+                    <input type="password" id="settings-new-password" class="settings-input" placeholder="Neues Passwort (min. 6 Zeichen)" autocomplete="new-password">
+                </div>
+            </div>
+
+            <!-- Notification Settings Section -->
+            <div class="settings-section">
+                <h3 class="settings-section-title">Benachrichtigungen</h3>
+
+                <div class="notification-status">
+                    <div id="settings-notification-unsupported" class="notification-warning" style="display: none;">
+                        🔕 Push-Benachrichtigungen werden von diesem Browser nicht unterstützt
+                    </div>
+                    <div id="settings-notification-denied" class="notification-warning" style="display: none;">
+                        🔕 Benachrichtigungen wurden blockiert. Bitte in den Browser-Einstellungen aktivieren.
+                    </div>
+                    <div id="settings-notification-enabled" class="notification-success" style="display: none;">
+                        🔔 Push-Benachrichtigungen sind aktiviert
+                    </div>
+                    <div id="settings-notification-disabled" class="notification-info" style="display: none;">
+                        🔕 Push-Benachrichtigungen sind deaktiviert
+                    </div>
+                </div>
+
+                <button id="settings-enable-notifications-btn" class="notification-toggle-btn" style="display: none;">
+                    <span class="btn-text">Benachrichtigungen aktivieren</span>
+                    <span class="btn-icon">🔔</span>
+                </button>
+
+                <div id="settings-notification-preferences" style="display: none;">
+                    <p class="form-hint" style="margin-bottom: 1rem;">Wähle aus, über welche Aktivitäten du benachrichtigt werden möchtest:</p>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">💬 Chat-Nachrichten</div>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="settings-notify-chat" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">🎮 Neue Spiele</div>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="settings-notify-games" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="settings-item-label">🏠 Unterkünfte</div>
+                        <label class="toggle-label">
+                            <input type="checkbox" id="settings-notify-accommodations" class="toggle-checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <button id="save-settings-btn" class="submit-btn">
+                <span class="btn-text">Einstellungen speichern</span>
+                <span class="btn-icon">→</span>
+            </button>
+            <div id="settings-message" class="form-response" style="display: none;"></div>
         </div>
     </div>
 
