@@ -1391,4 +1391,210 @@ document.addEventListener('DOMContentLoaded', () => {
         const observer = new MutationObserver(updateMobileAdminNav);
         observer.observe(desktopAdminTab, { attributes: true, attributeFilter: ['style'] });
     }
+
+    // ============================================
+    // PWA & PUSH NOTIFICATIONS
+    // ============================================
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registered:', registration);
+            })
+            .catch(error => {
+                console.error('Service Worker registration failed:', error);
+            });
+    }
+
+    // Notification state management
+    let notificationSubscription = null;
+
+    // Check notification support and update UI
+    function updateNotificationUI() {
+        const unsupportedMsg = document.getElementById('notification-unsupported');
+        const deniedMsg = document.getElementById('notification-denied');
+        const enabledMsg = document.getElementById('notification-enabled');
+        const disabledMsg = document.getElementById('notification-disabled');
+        const enableBtn = document.getElementById('enable-notifications-btn');
+        const preferencesDiv = document.getElementById('notification-preferences');
+
+        // Hide all messages
+        [unsupportedMsg, deniedMsg, enabledMsg, disabledMsg].forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+
+        // Check support
+        if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+            if (unsupportedMsg) unsupportedMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+            return;
+        }
+
+        // Check permission
+        if (Notification.permission === 'denied') {
+            if (deniedMsg) deniedMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+            return;
+        }
+
+        if (Notification.permission === 'granted' && notificationSubscription) {
+            if (enabledMsg) enabledMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'none';
+            if (preferencesDiv) preferencesDiv.style.display = 'block';
+        } else {
+            if (disabledMsg) disabledMsg.style.display = 'block';
+            if (enableBtn) enableBtn.style.display = 'block';
+            if (preferencesDiv) preferencesDiv.style.display = 'none';
+        }
+    }
+
+    // Subscribe to push notifications
+    async function subscribeToPushNotifications() {
+        try {
+            const registration = await navigator.serviceWorker.ready;
+
+            // Get VAPID public key from server
+            const { publicKey } = await API.request('/api/notifications?action=public-key');
+
+            // Subscribe to push
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicKey)
+            });
+
+            // Send subscription to server
+            await API.request('/api/notifications?action=subscribe', {
+                method: 'POST',
+                body: JSON.stringify({ subscription })
+            });
+
+            notificationSubscription = subscription;
+            updateNotificationUI();
+            await loadNotificationPreferences();
+
+            showMessage('notification-preferences-message', 'Benachrichtigungen erfolgreich aktiviert!', 'success');
+        } catch (error) {
+            console.error('Failed to subscribe to push notifications:', error);
+            showMessage('notification-preferences-message', 'Fehler beim Aktivieren der Benachrichtigungen', 'error');
+        }
+    }
+
+    // Unsubscribe from push notifications
+    async function unsubscribeFromPushNotifications() {
+        try {
+            if (notificationSubscription) {
+                await notificationSubscription.unsubscribe();
+
+                await API.request('/api/notifications?action=unsubscribe', {
+                    method: 'POST',
+                    body: JSON.stringify({ endpoint: notificationSubscription.endpoint })
+                });
+
+                notificationSubscription = null;
+                updateNotificationUI();
+            }
+        } catch (error) {
+            console.error('Failed to unsubscribe from push notifications:', error);
+        }
+    }
+
+    // Load notification preferences
+    async function loadNotificationPreferences() {
+        try {
+            const { preferences } = await API.request('/api/notifications?action=preferences');
+
+            document.getElementById('notify-chat').checked = preferences.chat;
+            document.getElementById('notify-games').checked = preferences.games;
+            document.getElementById('notify-accommodations').checked = preferences.accommodations;
+        } catch (error) {
+            console.error('Failed to load notification preferences:', error);
+        }
+    }
+
+    // Save notification preferences
+    async function saveNotificationPreferences() {
+        try {
+            const preferences = {
+                chat: document.getElementById('notify-chat').checked,
+                games: document.getElementById('notify-games').checked,
+                accommodations: document.getElementById('notify-accommodations').checked
+            };
+
+            await API.request('/api/notifications?action=preferences', {
+                method: 'PUT',
+                body: JSON.stringify(preferences)
+            });
+
+            showMessage('notification-preferences-message', 'Einstellungen gespeichert!', 'success');
+        } catch (error) {
+            console.error('Failed to save notification preferences:', error);
+            showMessage('notification-preferences-message', 'Fehler beim Speichern der Einstellungen', 'error');
+        }
+    }
+
+    // Utility function to convert VAPID key
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    // Event listeners for notification settings
+    const enableNotificationsBtn = document.getElementById('enable-notifications-btn');
+    if (enableNotificationsBtn) {
+        enableNotificationsBtn.addEventListener('click', async () => {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                await subscribeToPushNotifications();
+            } else {
+                updateNotificationUI();
+            }
+        });
+    }
+
+    const saveNotificationPreferencesBtn = document.getElementById('save-notification-preferences-btn');
+    if (saveNotificationPreferencesBtn) {
+        saveNotificationPreferencesBtn.addEventListener('click', saveNotificationPreferences);
+    }
+
+    // Check existing subscription on load
+    async function checkExistingSubscription() {
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            try {
+                const registration = await navigator.serviceWorker.ready;
+                const subscription = await registration.pushManager.getSubscription();
+
+                if (subscription) {
+                    notificationSubscription = subscription;
+                    await loadNotificationPreferences();
+                }
+
+                updateNotificationUI();
+            } catch (error) {
+                console.error('Error checking existing subscription:', error);
+                updateNotificationUI();
+            }
+        } else {
+            updateNotificationUI();
+        }
+    }
+
+    // Initialize notifications when user is authenticated
+    const originalShowAppScreen = showAppScreen;
+    showAppScreen = function() {
+        originalShowAppScreen.apply(this, arguments);
+        setTimeout(checkExistingSubscription, 500);
+    };
 });

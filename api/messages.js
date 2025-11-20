@@ -1,6 +1,7 @@
 // Consolidated Messages API
 const { sql } = require('../lib/db');
 const { authenticateRequest } = require('../lib/auth');
+const { sendNotification } = require('../lib/notifications');
 
 module.exports = async (req, res) => {
   const { method } = req;
@@ -58,6 +59,11 @@ module.exports = async (req, res) => {
       const userResult = await sql`
         SELECT username, is_admin FROM users WHERE id = ${auth.user.userId}
       `;
+
+      // Send push notification to all users
+      sendNotification('chat', 'Neue Chat-Nachricht', `${userResult.rows[0].username}: ${trimmedContent.substring(0, 100)}${trimmedContent.length > 100 ? '...' : ''}`).catch(err => {
+        console.error('Failed to send notification:', err);
+      });
 
       return res.status(201).json({
         success: true,

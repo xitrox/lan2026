@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LAN Party 2026 - Operation Reunion</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Event-Management für die LAN Party 2026">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LAN 2026">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -290,6 +305,66 @@
                             </button>
                         </form>
                         <div id="profile-message" class="form-response" style="display: none;"></div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="section-header" style="margin-top: 2rem;">
+                        <h2 class="section-title">Benachrichtigungs-Einstellungen</h2>
+                    </div>
+                    <div class="notification-settings-container">
+                        <div class="notification-status">
+                            <div id="notification-unsupported" class="notification-warning" style="display: none;">
+                                🔕 Push-Benachrichtigungen werden von diesem Browser nicht unterstützt
+                            </div>
+                            <div id="notification-denied" class="notification-warning" style="display: none;">
+                                🔕 Benachrichtigungen wurden blockiert. Bitte in den Browser-Einstellungen aktivieren.
+                            </div>
+                            <div id="notification-enabled" class="notification-success" style="display: none;">
+                                🔔 Push-Benachrichtigungen sind aktiviert
+                            </div>
+                            <div id="notification-disabled" class="notification-info" style="display: none;">
+                                🔕 Push-Benachrichtigungen sind deaktiviert
+                            </div>
+                        </div>
+
+                        <button id="enable-notifications-btn" class="notification-toggle-btn" style="display: none;">
+                            <span class="btn-text">Benachrichtigungen aktivieren</span>
+                            <span class="btn-icon">🔔</span>
+                        </button>
+
+                        <div id="notification-preferences" style="display: none;">
+                            <p class="form-hint" style="margin-bottom: 1rem;">Wähle aus, über welche Aktivitäten du benachrichtigt werden möchtest:</p>
+
+                            <div class="notification-preference-item">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="notify-chat" class="toggle-checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text">💬 Neue Chat-Nachrichten</span>
+                                </label>
+                            </div>
+
+                            <div class="notification-preference-item">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="notify-games" class="toggle-checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text">🎮 Neue Spiele hinzugefügt</span>
+                                </label>
+                            </div>
+
+                            <div class="notification-preference-item">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="notify-accommodations" class="toggle-checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text">🏠 Änderungen bei Unterkünften</span>
+                                </label>
+                            </div>
+
+                            <button id="save-notification-preferences-btn" class="submit-btn" style="margin-top: 1rem;">
+                                <span class="btn-text">Einstellungen speichern</span>
+                                <span class="btn-icon">→</span>
+                            </button>
+                            <div id="notification-preferences-message" class="form-response" style="display: none;"></div>
+                        </div>
                     </div>
                 </div>
 

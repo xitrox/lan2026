@@ -1,6 +1,7 @@
 // Consolidated Cabins API
 const { sql } = require('../lib/db');
 const { authenticateRequest, requireAdmin } = require('../lib/auth');
+const { sendNotification } = require('../lib/notifications');
 
 module.exports = async (req, res) => {
   const { method } = req;
@@ -53,6 +54,11 @@ module.exports = async (req, res) => {
         VALUES (${name}, ${url || null}, ${imageUrl || null}, ${description || null}, ${auth.user.userId})
         RETURNING id, name, url, image_url, description, created_at
       `;
+
+      // Send push notification
+      sendNotification('accommodations', 'Neue Unterkunft hinzugefügt', `${name} wurde hinzugefügt`).catch(err => {
+        console.error('Failed to send notification:', err);
+      });
 
       return res.status(201).json({
         success: true,

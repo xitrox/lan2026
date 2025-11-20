@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
       const eventData = result.rows[0];
 
       const usersCount = await sql`
-        SELECT COUNT(*) as count FROM users
+        SELECT COUNT(*) as count FROM users WHERE is_attending = true
       `;
 
       return res.status(200).json({
