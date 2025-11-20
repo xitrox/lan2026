@@ -8,13 +8,12 @@ module.exports = async (req, res) => {
 
   try {
     const auth = authenticateRequest(req);
-    const adminCheck = requireAdmin(auth);
 
-    if (adminCheck) {
-      return res.status(adminCheck.status).json({ error: adminCheck.error });
+    if (!auth.authenticated) {
+      return res.status(401).json({ error: 'Nicht authentifiziert' });
     }
 
-    // GET USERS
+    // GET USERS - requires authentication but not admin (for participants list)
     if (method === 'GET' && action === 'users') {
       const result = await sql`
         SELECT id, username, email, is_admin, is_attending, created_at
@@ -26,6 +25,13 @@ module.exports = async (req, res) => {
         success: true,
         users: result.rows
       });
+    }
+
+    // All other actions require admin rights
+    const adminCheck = requireAdmin(auth);
+
+    if (adminCheck) {
+      return res.status(adminCheck.status).json({ error: adminCheck.error });
     }
 
     // DELETE USER

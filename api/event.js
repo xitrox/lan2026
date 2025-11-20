@@ -7,13 +7,7 @@ module.exports = async (req, res) => {
   const { action } = req.query;
 
   try {
-    const auth = authenticateRequest(req);
-
-    if (!auth.authenticated) {
-      return res.status(401).json({ error: 'Nicht authentifiziert' });
-    }
-
-    // GET EVENT DATA
+    // GET EVENT DATA - PUBLIC (no auth required)
     if (method === 'GET' && action === 'get') {
       // Try to get event data with new column, fallback if column doesn't exist
       let result;
@@ -62,6 +56,12 @@ module.exports = async (req, res) => {
 
     // UPDATE EVENT DATA (Admin only)
     if (method === 'PUT' && action === 'update') {
+      const auth = authenticateRequest(req);
+
+      if (!auth.authenticated) {
+        return res.status(401).json({ error: 'Nicht authentifiziert' });
+      }
+
       const adminCheck = requireAdmin(auth);
       if (adminCheck) {
         return res.status(adminCheck.status).json({ error: adminCheck.error });
