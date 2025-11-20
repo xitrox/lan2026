@@ -467,7 +467,6 @@ function updateEventDisplay() {
     if (event.eventDate) {
         const startDate = new Date(event.eventDate);
         const dateStr = startDate.toLocaleDateString('de-DE', {
-            weekday: 'long',
             day: '2-digit',
             month: 'long',
             year: 'numeric'
@@ -485,7 +484,6 @@ function updateEventDisplay() {
             if (!isSameDay) {
                 // Different day: show end date
                 const endDateStr = endDate.toLocaleDateString('de-DE', {
-                    weekday: 'long',
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'
