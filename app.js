@@ -529,26 +529,13 @@ function updateCountdown(targetDate) {
     const diff = targetDate - now;
 
     const daysElement = document.getElementById('countdown-days');
+    const simpleLabelElement = document.querySelector('.countdown-label-simple');
 
     if (diff < 0) {
         // Event has started
         if (daysElement) {
             daysElement.textContent = '0';
         }
-
-        // Update old detailed countdown if it exists (backwards compatibility)
-        const hoursElement = document.getElementById('countdown-hours');
-        if (hoursElement) {
-            hoursElement.textContent = '00';
-            document.getElementById('countdown-minutes').textContent = '00';
-            document.getElementById('countdown-seconds').textContent = '00';
-        }
-
-        const labelElement = document.querySelector('.countdown-label');
-        if (labelElement) {
-            labelElement.textContent = 'EVENT LÄUFT! 🎉';
-        }
-        const simpleLabelElement = document.querySelector('.countdown-label-simple');
         if (simpleLabelElement) {
             simpleLabelElement.textContent = 'EVENT LÄUFT! 🎉';
         }
@@ -560,18 +547,6 @@ function updateCountdown(targetDate) {
     // Update simple countdown (days only)
     if (daysElement) {
         daysElement.textContent = String(days);
-    }
-
-    // Update old detailed countdown if it exists (backwards compatibility)
-    const hoursElement = document.getElementById('countdown-hours');
-    if (hoursElement) {
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        hoursElement.textContent = String(hours).padStart(2, '0');
-        document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
-        document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
     }
 
     // Update once per hour (since we only show days now)
