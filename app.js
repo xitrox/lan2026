@@ -535,12 +535,12 @@ function updateCountdown(targetDate) {
         if (totalDays >= 10) {
             // Show in weeks with 2 decimal places
             const weeks = totalDays / 7;
-            daysElement.textContent = weeks.toFixed(2);
-            simpleLabelElement.textContent = 'Wochen bis zum Event';
+            daysElement.textContent = weeks.toFixed(6);
+            simpleLabelElement.textContent = 'Wochen bis zur LAN';
         } else {
             // Show in days with 3 decimal places (more precision for last days)
             daysElement.textContent = totalDays.toFixed(3);
-            simpleLabelElement.textContent = 'Tage bis zum Event';
+            simpleLabelElement.textContent = 'Tage bis zum LAN';
         }
     }
 
