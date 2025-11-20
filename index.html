@@ -107,7 +107,8 @@
                         <span id="app-event-title" class="logo-text">LAN PARTY 2026</span>
                     </div>
                     <div class="header-actions">
-                        <span id="user-display" class="user-display"></span>
+                        <!-- Desktop Actions -->
+                        <span id="user-display" class="user-display desktop-only"></span>
                         <button id="user-menu-btn" class="icon-btn desktop-only" title="Benutzermenü">
                             ⚙️
                         </button>
@@ -117,10 +118,10 @@
                         <button id="logout-btn" class="icon-btn desktop-only" title="Abmelden">
                             🚪
                         </button>
-                        <button id="burger-menu-btn" class="burger-btn mobile-only" title="Menü">
-                            <span class="burger-line"></span>
-                            <span class="burger-line"></span>
-                            <span class="burger-line"></span>
+
+                        <!-- Mobile: User Avatar as Menu Button -->
+                        <button id="mobile-user-avatar-btn" class="user-avatar-btn mobile-only" title="Menü">
+                            <span id="user-avatar-initial" class="user-avatar-initial">?</span>
                         </button>
                     </div>
                 </div>
@@ -191,9 +192,12 @@
                     </div>
                 </div>
 
-                <!-- Top 3 Games -->
+                <!-- Top 3 Games & Add Game -->
                 <div class="top-games">
-                    <h3 class="top-games-title">🎮 Top 3 Spiele</h3>
+                    <div class="top-games-header">
+                        <h3 class="top-games-title">🎮 Top 3 Spiele</h3>
+                        <button id="home-add-game-btn" class="icon-btn-small" title="Spiel hinzufügen">+</button>
+                    </div>
                     <div id="top-games-list" class="top-games-list">
                         <div class="top-game-item">Lädt...</div>
                     </div>

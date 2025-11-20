@@ -303,6 +303,12 @@ function showAppScreen() {
     // Update UI
     document.getElementById('user-display').textContent = AppState.user.username;
 
+    // Update mobile user avatar
+    const avatarInitial = document.getElementById('user-avatar-initial');
+    if (avatarInitial && AppState.user.username) {
+        avatarInitial.textContent = AppState.user.username.charAt(0).toUpperCase();
+    }
+
     // Show admin options if admin
     if (AppState.isAdmin) {
         // Show admin in mobile menu
@@ -1052,9 +1058,18 @@ document.getElementById('add-cabin-btn').addEventListener('click', () => {
     document.getElementById('add-cabin-modal').style.display = 'flex';
 });
 
+// Add game button (from games page)
 document.getElementById('add-game-btn').addEventListener('click', () => {
     document.getElementById('add-game-modal').style.display = 'flex';
 });
+
+// Add game button (from home page)
+const homeAddGameBtn = document.getElementById('home-add-game-btn');
+if (homeAddGameBtn) {
+    homeAddGameBtn.addEventListener('click', () => {
+        document.getElementById('add-game-modal').style.display = 'flex';
+    });
+}
 
 // Close modals
 document.querySelectorAll('.modal-close').forEach(btn => {
@@ -1352,15 +1367,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // BURGER MENU
     // ============================================
     const burgerBtn = document.getElementById('burger-menu-btn');
+    const mobileUserAvatarBtn = document.getElementById('mobile-user-avatar-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
     const mobileHelpBtn = document.getElementById('mobile-help-btn');
     const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
 
-    // Open mobile menu
+    // Open mobile menu (old burger button - kept for backwards compatibility)
     if (burgerBtn) {
         burgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+    }
+
+    // Open mobile menu (new avatar button)
+    if (mobileUserAvatarBtn) {
+        mobileUserAvatarBtn.addEventListener('click', () => {
             mobileMenu.classList.add('active');
         });
     }
