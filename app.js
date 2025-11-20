@@ -425,7 +425,7 @@ function updateEventDisplay() {
     if (appTitle) appTitle.textContent = event.title || 'LAN PARTY 2026';
     document.title = (event.title || 'LAN Party 2026') + ' - Management';
 
-    // Update date with time range
+    // Update date - DATE ONLY (no time)
     if (event.eventDate) {
         const startDate = new Date(event.eventDate);
         const dateStr = startDate.toLocaleDateString('de-DE', {
@@ -434,40 +434,25 @@ function updateEventDisplay() {
             month: 'long',
             year: 'numeric'
         });
-        const startTimeStr = startDate.toLocaleTimeString('de-DE', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
 
-        let dateText = `${dateStr}, ${startTimeStr} Uhr`;
+        let dateText = dateStr;
 
-        // Add end date/time if available
+        // Add end date if available AND different from start date
         if (event.eventDateEnd) {
             const endDate = new Date(event.eventDateEnd);
 
             // Check if end date is on a different day
             const isSameDay = startDate.toDateString() === endDate.toDateString();
 
-            if (isSameDay) {
-                // Same day: just show end time
-                const endTimeStr = endDate.toLocaleTimeString('de-DE', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                dateText += ` - ${endTimeStr} Uhr`;
-            } else {
-                // Different day: show full end date
+            if (!isSameDay) {
+                // Different day: show end date
                 const endDateStr = endDate.toLocaleDateString('de-DE', {
                     weekday: 'long',
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'
                 });
-                const endTimeStr = endDate.toLocaleTimeString('de-DE', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                dateText += ` bis ${endDateStr}, ${endTimeStr} Uhr`;
+                dateText += ` - ${endDateStr}`;
             }
         }
 
@@ -492,27 +477,54 @@ function updateCountdown(targetDate) {
     const now = new Date();
     const diff = targetDate - now;
 
+    const daysElement = document.getElementById('countdown-days');
+
     if (diff < 0) {
-        document.getElementById('countdown-days').textContent = '00';
-        document.getElementById('countdown-hours').textContent = '00';
-        document.getElementById('countdown-minutes').textContent = '00';
-        document.getElementById('countdown-seconds').textContent = '00';
-        document.querySelector('.countdown-label').textContent = 'EVENT LÄUFT! 🎉';
+        // Event has started
+        if (daysElement) {
+            daysElement.textContent = '0';
+        }
+
+        // Update old detailed countdown if it exists (backwards compatibility)
+        const hoursElement = document.getElementById('countdown-hours');
+        if (hoursElement) {
+            hoursElement.textContent = '00';
+            document.getElementById('countdown-minutes').textContent = '00';
+            document.getElementById('countdown-seconds').textContent = '00';
+        }
+
+        const labelElement = document.querySelector('.countdown-label');
+        if (labelElement) {
+            labelElement.textContent = 'EVENT LÄUFT! 🎉';
+        }
+        const simpleLabelElement = document.querySelector('.countdown-label-simple');
+        if (simpleLabelElement) {
+            simpleLabelElement.textContent = 'EVENT LÄUFT! 🎉';
+        }
         return;
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
-    document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
-    document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+    // Update simple countdown (days only)
+    if (daysElement) {
+        daysElement.textContent = String(days);
+    }
 
-    // Update every second for live countdown
-    setTimeout(() => updateCountdown(targetDate), 1000);
+    // Update old detailed countdown if it exists (backwards compatibility)
+    const hoursElement = document.getElementById('countdown-hours');
+    if (hoursElement) {
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        hoursElement.textContent = String(hours).padStart(2, '0');
+        document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    // Update once per hour (since we only show days now)
+    setTimeout(() => updateCountdown(targetDate), 1000 * 60 * 60);
 }
 
 // ============================================

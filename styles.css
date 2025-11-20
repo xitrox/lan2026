@@ -1206,11 +1206,47 @@ body {
     margin: 0 0.5rem;
 }
 
+/* OLD event-date-hero - keeping for backwards compatibility */
 .event-date-hero {
     font-size: 1.1rem;
     color: var(--color-dark);
     margin-top: 1rem;
     font-weight: 500;
+}
+
+/* NEW: Prominent date display */
+.event-date-hero-large {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Simple countdown (days only) */
+.countdown-simple {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.countdown-days-large {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    font-family: 'Courier New', monospace;
+    line-height: 1;
+}
+
+.countdown-label-simple {
+    font-size: 1rem;
+    color: var(--color-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 /* ============================================ */
@@ -1561,7 +1597,8 @@ body {
     display: none;
 }
 
-@media (max-width: 768px) {
+/* Mobile breakpoint - use max-width: 1024px to catch tablets and larger phones */
+@media (max-width: 1024px) {
     .desktop-only {
         display: none !important;
     }
@@ -1571,8 +1608,9 @@ body {
     }
 
     .tab-nav {
-        display: none;
+        display: none !important;
     }
+}
 
     .mobile-menu {
         display: flex; /* Show on mobile */
@@ -1591,6 +1629,7 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* Old countdown styles - keeping for backwards compatibility */
     .countdown-number {
         font-size: 2rem;
     }
@@ -1604,6 +1643,20 @@ body {
         font-size: 1.5rem;
         margin: 0 0.25rem;
     }
+
+    /* New prominent date styles - mobile */
+    .event-date-hero-large {
+        font-size: 1.8rem;
+    }
+
+    .countdown-days-large {
+        font-size: 3rem;
+    }
+
+    .countdown-label-simple {
+        font-size: 0.85rem;
+    }
+}
 
     .voice-menu-container {
         width: 95%;
