@@ -529,15 +529,25 @@ function updateCountdown(targetDate) {
         return;
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    // Calculate total days as decimal
+    const totalDays = diff / (1000 * 60 * 60 * 24);
 
-    // Update simple countdown (days only)
-    if (daysElement) {
-        daysElement.textContent = String(days);
+    // Update countdown display
+    if (daysElement && simpleLabelElement) {
+        if (totalDays >= 10) {
+            // Show in weeks with 2 decimal places
+            const weeks = totalDays / 7;
+            daysElement.textContent = weeks.toFixed(2);
+            simpleLabelElement.textContent = 'Wochen bis zum Event';
+        } else {
+            // Show in days with 3 decimal places (more precision for last days)
+            daysElement.textContent = totalDays.toFixed(3);
+            simpleLabelElement.textContent = 'Tage bis zum Event';
+        }
     }
 
-    // Update once per hour (since we only show days now)
-    setTimeout(() => updateCountdown(targetDate), 1000 * 60 * 60);
+    // Update every second for visible movement
+    setTimeout(() => updateCountdown(targetDate), 1000);
 }
 
 // ============================================
