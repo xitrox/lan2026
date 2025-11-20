@@ -1416,10 +1416,62 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.register('/service-worker.js')
             .then(registration => {
                 console.log('Service Worker registered:', registration);
+
+                // Check for updates periodically (every 60 seconds)
+                setInterval(() => {
+                    registration.update();
+                }, 60000);
             })
             .catch(error => {
                 console.error('Service Worker registration failed:', error);
             });
+
+        // Listen for service worker messages (e.g., update notifications)
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SW_UPDATED') {
+                console.log('Service Worker updated to version:', event.data.version);
+                showUpdateNotification();
+            }
+        });
+    }
+
+    // Show update notification to user
+    function showUpdateNotification() {
+        const updateBanner = document.createElement('div');
+        updateBanner.id = 'update-banner';
+        updateBanner.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        `;
+        updateBanner.innerHTML = `
+            <span>🔄 Neue Version verfügbar!</span>
+            <button id="reload-btn" style="
+                background: white;
+                color: var(--color-primary);
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            ">Jetzt aktualisieren</button>
+        `;
+        document.body.prepend(updateBanner);
+
+        document.getElementById('reload-btn').addEventListener('click', () => {
+            window.location.reload();
+        });
     }
 
     // Notification state management

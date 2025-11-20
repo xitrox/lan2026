@@ -1,4 +1,5 @@
-const CACHE_NAME = 'lan2026-v1';
+const CACHE_VERSION = '2025-11-20-v2';
+const CACHE_NAME = `lan2026-${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,31 +10,45 @@ const urlsToCache = [
 
 // Install event - cache assets
 self.addEventListener('install', (event) => {
+  console.log('[ServiceWorker] Installing new version:', CACHE_VERSION);
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
+        console.log('[ServiceWorker] Caching app shell');
         return cache.addAll(urlsToCache);
       })
   );
+  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+  console.log('[ServiceWorker] Activating new version:', CACHE_VERSION);
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
+            console.log('[ServiceWorker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
+    }).then(() => {
+      // Notify all clients about the update
+      return self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: 'SW_UPDATED',
+            version: CACHE_VERSION
+          });
+        });
+      });
     })
   );
-  self.clients.claim();
+  // Take control of all pages immediately
+  return self.clients.claim();
 });
 
 // Fetch event - serve from cache, fallback to network
