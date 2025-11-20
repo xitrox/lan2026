@@ -590,5 +590,21 @@
     </div>
 
     <script src="app.js"></script>
+
+    <!-- Dev Hot Reload (only works in development) -->
+    <script>
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        let lastModified = {};
+        setInterval(() => {
+            ['app.js', 'styles.css'].forEach(file => {
+                fetch(file, { method: 'HEAD', cache: 'no-cache' }).then(r => {
+                    const mod = r.headers.get('last-modified');
+                    if (lastModified[file] && lastModified[file] !== mod) location.reload();
+                    lastModified[file] = mod;
+                });
+            });
+        }, 1000);
+    }
+    </script>
 </body>
 </html>
