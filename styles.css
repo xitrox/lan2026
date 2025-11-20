@@ -150,15 +150,16 @@ body {
 }
 
 /* ============================================
-   HEADER (App)
+   HEADER (App) - COMPACT PWA STYLE
    ============================================ */
 .header {
     background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
     color: var(--color-white);
-    padding: 20px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    position: relative;
-    z-index: 10;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
     border-bottom: 3px solid var(--color-white);
 }
 
@@ -166,20 +167,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    min-height: 40px;
 }
 
 .logo {
     display: flex;
-    flex-direction: column;
+    align-items: center;
 }
 
 .logo-text {
-    font-size: 2rem;
-    font-weight: bold;
-    letter-spacing: 3px;
-    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
 }
 
 .logo-subtitle {
@@ -250,9 +251,12 @@ body {
 
 .event-info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 15px;
     margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Event Info Card - ET STYLE */
@@ -1146,25 +1150,33 @@ body {
    ============================================ */
 @media (max-width: 768px) {
     .logo-text {
-        font-size: 1.5rem;
+        font-size: 1rem;
+        letter-spacing: 1px;
     }
 
     .logo-subtitle {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+    }
+
+    .header {
+        padding: 8px 0;
     }
 
     .header-content {
-        flex-direction: column;
-        text-align: center;
+        min-height: 36px;
     }
 
     .header-actions {
-        flex-wrap: wrap;
-        justify-content: center;
+        gap: 10px;
     }
 
     .event-info-grid {
-        grid-template-columns: 1fr;
+        gap: 12px;
+        max-width: 100%;
+    }
+
+    .event-info-card {
+        padding: 15px;
     }
 
     .tab-list {
