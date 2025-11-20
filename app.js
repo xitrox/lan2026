@@ -316,10 +316,15 @@ function showAppScreen() {
         if (mobileAdminNav) {
             mobileAdminNav.style.display = 'block';
         }
-        // Show add cabin button
+        // Show add cabin button (on cabins page)
         const addCabinBtn = document.getElementById('add-cabin-btn');
         if (addCabinBtn) {
             addCabinBtn.style.display = 'inline-block';
+        }
+        // Show cabins section on home page
+        const homeCabinsSection = document.getElementById('home-cabins-section');
+        if (homeCabinsSection) {
+            homeCabinsSection.style.display = 'block';
         }
     }
 
@@ -593,10 +598,31 @@ async function loadCabins() {
         const response = await API.getCabins();
         AppState.cabins = response.cabins;
         renderCabins();
+        updateHomeCabins();
     } catch (error) {
         console.error('Failed to load cabins:', error);
         document.getElementById('cabins-grid').innerHTML = '<p class="error">Fehler beim Laden der Unterkünfte</p>';
     }
+}
+
+function updateHomeCabins() {
+    const allCabins = AppState.cabins;
+    const list = document.getElementById('home-cabins-list');
+
+    if (!list) return; // Element doesn't exist (not admin)
+
+    if (allCabins.length === 0) {
+        list.innerHTML = '<div class="top-game-item">Noch keine Unterkünfte</div>';
+        return;
+    }
+
+    list.innerHTML = allCabins.map((cabin, index) => `
+        <div class="top-game-item">
+            <span class="top-game-rank">#${index + 1}</span>
+            <span class="top-game-name">${cabin.name}</span>
+            <span class="top-game-votes">${cabin.vote_count} ♡</span>
+        </div>
+    `).join('');
 }
 
 function renderCabins() {
@@ -721,15 +747,15 @@ function renderGames() {
 }
 
 function updateTopGames() {
-    const topGames = AppState.games.slice(0, 3);
+    const allGames = AppState.games;
     const list = document.getElementById('top-games-list');
 
-    if (topGames.length === 0) {
+    if (allGames.length === 0) {
         list.innerHTML = '<div class="top-game-item">Noch keine Spiele</div>';
         return;
     }
 
-    list.innerHTML = topGames.map((game, index) => `
+    list.innerHTML = allGames.map((game, index) => `
         <div class="top-game-item">
             <span class="top-game-rank">#${index + 1}</span>
             <span class="top-game-name">${game.name}</span>
@@ -1068,6 +1094,14 @@ const homeAddGameBtn = document.getElementById('home-add-game-btn');
 if (homeAddGameBtn) {
     homeAddGameBtn.addEventListener('click', () => {
         document.getElementById('add-game-modal').style.display = 'flex';
+    });
+}
+
+// Add cabin button (from home page)
+const homeAddCabinBtn = document.getElementById('home-add-cabin-btn');
+if (homeAddCabinBtn) {
+    homeAddCabinBtn.addEventListener('click', () => {
+        document.getElementById('add-cabin-modal').style.display = 'flex';
     });
 }
 
