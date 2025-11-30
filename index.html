@@ -29,7 +29,15 @@
     <!-- LOGIN / REGISTRATION SCREEN -->
     <!-- ============================================ -->
     <div id="auth-screen" class="auth-screen">
-        <div class="auth-container">
+        <!-- Auto-Login Loading Indicator -->
+        <div id="auth-loading" class="auth-loading" style="display: none;">
+            <div class="auth-loading-container">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Anmeldung läuft...</p>
+            </div>
+        </div>
+
+        <div id="auth-container" class="auth-container">
             <div class="auth-header">
                 <div class="logo">
                     <span id="auth-event-title" class="logo-text">LAN PARTY 2026</span>

@@ -277,23 +277,40 @@ async function checkAuth() {
         return false;
     }
 
+    // Show loading indicator while verifying token
+    showAuthLoading();
+
     try {
         const response = await API.verifyToken();
         AppState.user = response.user;
         AppState.isAdmin = response.user.isAdmin;
+        hideAuthLoading();
         showAppScreen();
         return true;
     } catch (error) {
         console.error('Auth verification failed:', error);
         clearToken();
+        hideAuthLoading();
         showAuthScreen();
         return false;
     }
 }
 
+function showAuthLoading() {
+    document.getElementById('auth-loading').style.display = 'flex';
+    document.getElementById('auth-container').style.display = 'none';
+}
+
+function hideAuthLoading() {
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-container').style.display = 'block';
+}
+
 function showAuthScreen() {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('auth-container').style.display = 'block';
 }
 
 function showAppScreen() {
@@ -759,9 +776,29 @@ function updateTopGames() {
         <div class="top-game-item">
             <span class="top-game-rank">#${index + 1}</span>
             <span class="top-game-name">${game.name}</span>
-            <span class="top-game-votes">${game.vote_count} ♡</span>
+            <button class="top-game-like-btn ${game.user_voted ? 'liked' : ''}" data-game-id="${game.id}" title="${game.user_voted ? 'Like entfernen' : 'Spiel liken'}">
+                ${game.user_voted ? '♥' : '♡'} ${game.vote_count}
+            </button>
         </div>
     `).join('');
+
+    // Add event listeners for like buttons
+    list.querySelectorAll('.top-game-like-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const gameId = parseInt(btn.dataset.gameId);
+            const game = AppState.games.find(g => g.id === gameId);
+
+            try {
+                // Toggle the like state
+                await API.voteGame(gameId, !game.user_voted);
+                // Reload games to get updated state
+                await loadGames();
+            } catch (error) {
+                alert('Fehler beim Liken: ' + error.message);
+            }
+        });
+    });
 }
 
 // ============================================
