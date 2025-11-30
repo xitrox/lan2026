@@ -36,13 +36,8 @@ module.exports = async (req, res) => {
       });
     }
 
-    // ADD CABIN (Admin only)
+    // ADD CABIN (All authenticated users)
     if (method === 'POST' && action === 'add') {
-      const adminCheck = requireAdmin(auth);
-      if (adminCheck) {
-        return res.status(adminCheck.status).json({ error: adminCheck.error });
-      }
-
       const { name, url, imageUrl, description } = req.body;
 
       if (!name) {

@@ -326,22 +326,24 @@ function showAppScreen() {
         avatarInitial.textContent = AppState.user.username.charAt(0).toUpperCase();
     }
 
+    // Show add cabin buttons for all authenticated users
+    const addCabinBtn = document.getElementById('add-cabin-btn');
+    if (addCabinBtn) {
+        addCabinBtn.style.display = 'inline-block';
+    }
+
+    // Show cabins section on home page for all users
+    const homeCabinsSection = document.getElementById('home-cabins-section');
+    if (homeCabinsSection) {
+        homeCabinsSection.style.display = 'block';
+    }
+
     // Show admin options if admin
     if (AppState.isAdmin) {
         // Show admin in mobile menu
         const mobileAdminNav = document.getElementById('mobile-admin-nav');
         if (mobileAdminNav) {
             mobileAdminNav.style.display = 'block';
-        }
-        // Show add cabin button (on cabins page)
-        const addCabinBtn = document.getElementById('add-cabin-btn');
-        if (addCabinBtn) {
-            addCabinBtn.style.display = 'inline-block';
-        }
-        // Show cabins section on home page
-        const homeCabinsSection = document.getElementById('home-cabins-section');
-        if (homeCabinsSection) {
-            homeCabinsSection.style.display = 'block';
         }
     }
 
@@ -678,12 +680,15 @@ function renderCabins() {
     }
 
     grid.innerHTML = AppState.cabins.map(cabin => `
-        <div class="cabin-card">
-            ${cabin.image_url ? `<img src="${cabin.image_url}" alt="${cabin.name}" class="cabin-image">` : ''}
-            <div class="cabin-content">
+        <div class="cabin-card" data-cabin-id="${cabin.id}">
+            <div class="cabin-card-header">
                 <h3 class="cabin-name">${cabin.name}</h3>
-                ${cabin.description ? `<p class="cabin-description">${cabin.description}</p>` : ''}
-                ${cabin.url ? `<a href="${cabin.url}" target="_blank" class="cabin-link">Link öffnen →</a>` : ''}
+                <span class="cabin-expand-icon">▼</span>
+            </div>
+            <div class="cabin-card-details" style="display: none;">
+                ${cabin.image_url ? `<img src="${cabin.image_url}" alt="${cabin.name}" class="cabin-image">` : '<div class="cabin-no-image">Kein Bild verfügbar</div>'}
+                ${cabin.description ? `<p class="cabin-description">${cabin.description}</p>` : '<p class="cabin-description-empty">Keine Beschreibung verfügbar</p>'}
+                ${cabin.url ? `<a href="${cabin.url}" target="_blank" class="cabin-link" onclick="event.stopPropagation()">Link öffnen →</a>` : ''}
                 <div class="cabin-votes">
                     <button class="vote-btn ${cabin.user_voted ? 'voted' : ''}" data-cabin-id="${cabin.id}">
                         ${cabin.user_voted ? '✓' : '♡'} ${cabin.vote_count} Stimme(n)
@@ -694,9 +699,29 @@ function renderCabins() {
         </div>
     `).join('');
 
+    // Add expand/collapse event listeners
+    grid.querySelectorAll('.cabin-card-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const card = header.parentElement;
+            const details = card.querySelector('.cabin-card-details');
+            const icon = card.querySelector('.cabin-expand-icon');
+
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                icon.textContent = '▲';
+                card.classList.add('expanded');
+            } else {
+                details.style.display = 'none';
+                icon.textContent = '▼';
+                card.classList.remove('expanded');
+            }
+        });
+    });
+
     // Add vote event listeners
     grid.querySelectorAll('.vote-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             const cabinId = parseInt(btn.dataset.cabinId);
             const cabin = AppState.cabins.find(c => c.id === cabinId);
             try {
@@ -710,7 +735,8 @@ function renderCabins() {
 
     // Add delete event listeners (admin only)
     grid.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             if (!confirm('Unterkunft wirklich löschen?')) return;
             const cabinId = parseInt(btn.dataset.cabinId);
             try {
