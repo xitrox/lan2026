@@ -326,16 +326,10 @@ function showAppScreen() {
         avatarInitial.textContent = AppState.user.username.charAt(0).toUpperCase();
     }
 
-    // Show add cabin buttons for all authenticated users
+    // Show add cabin button for all authenticated users
     const addCabinBtn = document.getElementById('add-cabin-btn');
     if (addCabinBtn) {
         addCabinBtn.style.display = 'inline-block';
-    }
-
-    // Show cabins section on home page for all users
-    const homeCabinsSection = document.getElementById('home-cabins-section');
-    if (homeCabinsSection) {
-        homeCabinsSection.style.display = 'block';
     }
 
     // Show admin options if admin
