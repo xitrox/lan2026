@@ -589,18 +589,45 @@ async function loadParticipantsList() {
 
         const listContainer = document.getElementById('participants-list');
 
-        if (attendingUsers.length === 0) {
-            listContainer.innerHTML = '<div class="participant-item">Noch keine Teilnehmer</div>';
-            return;
-        }
+        // Check if current user is attending
+        const currentUserAttending = AppState.user?.isAttending;
 
-        listContainer.innerHTML = attendingUsers.map(user => `
-            <div class="participant-item">
-                <span class="participant-avatar">${user.username.charAt(0).toUpperCase()}</span>
-                <span class="participant-name">${user.username}</span>
-                ${user.is_admin ? '<span class="participant-badge">👑</span>' : ''}
-            </div>
-        `).join('');
+        // Show prompt if user is not attending
+        if (!currentUserAttending) {
+            const promptHTML = `
+                <div class="attendance-prompt">
+                    <p class="attendance-prompt-text">Du hast deine Teilnahme noch nicht bestätigt.</p>
+                    <button id="attendance-prompt-btn" class="attendance-prompt-btn">Jetzt anmelden</button>
+                </div>
+            `;
+            listContainer.innerHTML = promptHTML + (attendingUsers.length === 0
+                ? '<div class="participant-item">Noch keine Teilnehmer</div>'
+                : attendingUsers.map(user => `
+                    <div class="participant-item">
+                        <span class="participant-avatar">${user.username.charAt(0).toUpperCase()}</span>
+                        <span class="participant-name">${user.username}</span>
+                        ${user.is_admin ? '<span class="participant-badge">👑</span>' : ''}
+                    </div>
+                `).join(''));
+
+            // Add click handler to navigate to profile
+            document.getElementById('attendance-prompt-btn').addEventListener('click', () => {
+                navigateTo('profile');
+            });
+        } else {
+            if (attendingUsers.length === 0) {
+                listContainer.innerHTML = '<div class="participant-item">Noch keine Teilnehmer</div>';
+                return;
+            }
+
+            listContainer.innerHTML = attendingUsers.map(user => `
+                <div class="participant-item">
+                    <span class="participant-avatar">${user.username.charAt(0).toUpperCase()}</span>
+                    <span class="participant-name">${user.username}</span>
+                    ${user.is_admin ? '<span class="participant-badge">👑</span>' : ''}
+                </div>
+            `).join('');
+        }
     } catch (error) {
         console.error('Failed to load participants:', error);
         // Silent fail - participants list is not critical
