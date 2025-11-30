@@ -660,9 +660,29 @@ function updateHomeCabins() {
         <div class="top-game-item">
             <span class="top-game-rank">#${index + 1}</span>
             <span class="top-game-name">${cabin.name}</span>
-            <span class="top-game-votes">${cabin.vote_count} ♡</span>
+            <button class="top-game-like-btn ${cabin.user_voted ? 'liked' : ''}" data-cabin-id="${cabin.id}" title="${cabin.user_voted ? 'Vote entfernen' : 'Unterkunft voten'}">
+                ${cabin.user_voted ? '♥' : '♡'} ${cabin.vote_count}
+            </button>
         </div>
     `).join('');
+
+    // Add event listeners for cabin vote buttons
+    list.querySelectorAll('.top-game-like-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const cabinId = parseInt(btn.dataset.cabinId);
+            const cabin = AppState.cabins.find(c => c.id === cabinId);
+
+            try {
+                // Toggle the vote state
+                await API.voteCabin(cabinId, !cabin.user_voted);
+                // Reload cabins to get updated state
+                await loadCabins();
+            } catch (error) {
+                alert('Fehler beim Voten: ' + error.message);
+            }
+        });
+    });
 }
 
 function renderCabins() {
