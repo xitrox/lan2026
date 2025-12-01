@@ -657,17 +657,51 @@ function updateHomeCabins() {
     }
 
     list.innerHTML = allCabins.map((cabin, index) => `
-        <div class="top-game-item">
-            <span class="top-game-rank">#${index + 1}</span>
-            <span class="top-game-name">${cabin.name}</span>
-            <button class="top-game-like-btn ${cabin.user_voted ? 'liked' : ''}" data-cabin-id="${cabin.id}" title="${cabin.user_voted ? 'Vote entfernen' : 'Unterkunft voten'}">
-                ${cabin.user_voted ? '♥' : '♡'} ${cabin.vote_count}
-            </button>
+        <div class="home-cabin-card" data-cabin-id="${cabin.id}">
+            <div class="home-cabin-header">
+                <span class="top-game-rank">#${index + 1}</span>
+                <span class="top-game-name">${cabin.name}</span>
+                <span class="cabin-expand-icon">▼</span>
+            </div>
+            <div class="home-cabin-details" style="display: none;">
+                ${cabin.image_url ? `<img src="${cabin.image_url}" alt="${cabin.name}" class="cabin-image">` : '<div class="cabin-no-image">Kein Bild verfügbar</div>'}
+                ${cabin.description ? `<p class="cabin-description">${cabin.description}</p>` : '<p class="cabin-description-empty">Keine Beschreibung verfügbar</p>'}
+                ${cabin.url ? `<a href="${cabin.url}" target="_blank" class="cabin-link" onclick="event.stopPropagation()">Link öffnen →</a>` : ''}
+                <div class="cabin-votes">
+                    <button class="vote-btn ${cabin.user_voted ? 'voted' : ''}" data-cabin-id="${cabin.id}">
+                        ${cabin.user_voted ? '✓' : '♡'} ${cabin.vote_count} Stimme(n)
+                    </button>
+                    ${AppState.isAdmin ? `<button class="delete-btn" data-cabin-id="${cabin.id}" data-type="cabin">🗑️</button>` : ''}
+                </div>
+            </div>
         </div>
     `).join('');
 
-    // Add event listeners for cabin vote buttons
-    list.querySelectorAll('.top-game-like-btn').forEach(btn => {
+    // Add expand/collapse event listeners
+    list.querySelectorAll('.home-cabin-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const card = header.parentElement;
+            const details = card.querySelector('.home-cabin-details');
+            const icon = card.querySelector('.cabin-expand-icon');
+
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                icon.textContent = '▲';
+                card.classList.add('expanded');
+                // Scroll to show the expanded card
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                details.style.display = 'none';
+                icon.textContent = '▼';
+                card.classList.remove('expanded');
+            }
+        });
+    });
+
+    // Add vote event listeners for cabin vote buttons
+    list.querySelectorAll('.vote-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const cabinId = parseInt(btn.dataset.cabinId);
@@ -680,6 +714,21 @@ function updateHomeCabins() {
                 await loadCabins();
             } catch (error) {
                 alert('Fehler beim Voten: ' + error.message);
+            }
+        });
+    });
+
+    // Add delete event listeners (admin only)
+    list.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (!confirm('Unterkunft wirklich löschen?')) return;
+            const cabinId = parseInt(btn.dataset.cabinId);
+            try {
+                await API.deleteCabin(cabinId);
+                await loadCabins();
+            } catch (error) {
+                alert('Fehler beim Löschen: ' + error.message);
             }
         });
     });

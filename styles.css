@@ -481,6 +481,45 @@ body {
     border-color: var(--color-secondary);
 }
 
+/* Home Cabin Cards (Expandable) */
+.home-cabin-card {
+    background: var(--color-white);
+    border: 2px solid var(--color-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.home-cabin-card.expanded {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.home-cabin-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    cursor: pointer;
+    background: linear-gradient(to right, rgba(196, 30, 58, 0.05), transparent);
+    transition: background 0.2s ease;
+}
+
+.home-cabin-header:hover {
+    background: linear-gradient(to right, rgba(196, 30, 58, 0.1), transparent);
+}
+
+.home-cabin-header .cabin-expand-icon {
+    margin-left: auto;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    transition: transform 0.3s ease;
+}
+
+.home-cabin-details {
+    padding: 0 12px 12px 12px;
+    animation: slideDown 0.3s ease;
+}
+
 /* ============================================
    MESSAGE BOARD (Prominent Section)
    ============================================ */
