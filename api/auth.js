@@ -40,8 +40,8 @@ module.exports = async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
-          isAdmin: user.is_admin,
-          isAttending: user.is_attending || false
+          isAdmin: Boolean(user.is_admin),
+          isAttending: Boolean(user.is_attending)
         },
         token
       });
@@ -116,7 +116,8 @@ module.exports = async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
-          isAdmin: user.is_admin
+          isAdmin: Boolean(user.is_admin),
+          isAttending: Boolean(user.is_attending)
         },
         token
       });
@@ -147,8 +148,8 @@ module.exports = async (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
-          isAdmin: user.is_admin,
-          isAttending: user.is_attending || false
+          isAdmin: Boolean(user.is_admin),
+          isAttending: Boolean(user.is_attending)
         }
       });
     }
@@ -219,9 +220,9 @@ module.exports = async (req, res) => {
         values.push(newPasswordHash);
       }
 
-      if (isAttending !== undefined) {
+      if (isAttending !== undefined && isAttending !== null) {
         updates.push(`is_attending = $${paramCount++}`);
-        values.push(isAttending);
+        values.push(Boolean(isAttending));
       }
 
       if (updates.length > 0) {
@@ -244,8 +245,8 @@ module.exports = async (req, res) => {
           id: updatedUser.rows[0].id,
           username: updatedUser.rows[0].username,
           email: updatedUser.rows[0].email,
-          isAdmin: updatedUser.rows[0].is_admin,
-          isAttending: updatedUser.rows[0].is_attending || false
+          isAdmin: Boolean(updatedUser.rows[0].is_admin),
+          isAttending: Boolean(updatedUser.rows[0].is_attending)
         }
       });
     }

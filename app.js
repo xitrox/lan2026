@@ -986,7 +986,7 @@ setInterval(() => {
 function loadProfileForm() {
     document.getElementById('profile-username').value = AppState.user.username;
     document.getElementById('profile-email').value = AppState.user.email;
-    document.getElementById('profile-is-attending').checked = AppState.user.isAttending || false;
+    document.getElementById('profile-is-attending').checked = Boolean(AppState.user.isAttending);
     document.getElementById('profile-current-password').value = '';
     document.getElementById('profile-new-password').value = '';
 }
@@ -1028,8 +1028,9 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
         AppState.user.email = email;
         AppState.user.isAttending = response.user.isAttending;
 
-        // Reload event data to update participant count
+        // Reload event data and participants list to update counts
         await loadEventData();
+        await loadParticipantsList();
 
         setTimeout(() => {
             messageDiv.style.display = 'none';
