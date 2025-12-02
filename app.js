@@ -1033,9 +1033,12 @@ setInterval(() => {
 // PROFILE
 // ============================================
 function loadProfileForm() {
+    console.log('Loading profile form - AppState.user.isAttending:', AppState.user.isAttending);
     document.getElementById('profile-username').value = AppState.user.username;
     document.getElementById('profile-email').value = AppState.user.email;
-    document.getElementById('profile-is-attending').checked = Boolean(AppState.user.isAttending);
+    const isAttendingValue = Boolean(AppState.user.isAttending);
+    console.log('Setting checkbox to:', isAttendingValue);
+    document.getElementById('profile-is-attending').checked = isAttendingValue;
     document.getElementById('profile-current-password').value = '';
     document.getElementById('profile-new-password').value = '';
 }
@@ -1049,6 +1052,9 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
     const isAttending = document.getElementById('profile-is-attending').checked;
     const messageDiv = document.getElementById('profile-message');
 
+    console.log('Profile update - isAttending checkbox value:', isAttending);
+    console.log('Profile update - current AppState.user.isAttending:', AppState.user.isAttending);
+
     // Check if changing password
     if (newPassword && !currentPassword) {
         messageDiv.textContent = 'Bitte aktuelles Passwort eingeben';
@@ -1058,12 +1064,14 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
     }
 
     try {
+        console.log('Sending to API - isAttending:', isAttending);
         const response = await API.updateProfile(
             email,
             currentPassword || undefined,
             newPassword || undefined,
             isAttending
         );
+        console.log('API response - user.isAttending:', response.user.isAttending);
 
         messageDiv.textContent = 'Profil erfolgreich aktualisiert';
         messageDiv.className = 'form-response success';
